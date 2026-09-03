@@ -1,0 +1,27 @@
+{
+  "id": "HW-01",
+  "difficulty": "easy",
+  "ticket": {
+    "title": "Add a Hello World greeting",
+    "description": "Create the first greeting shown when a passenger opens the Spaceways application.",
+    "requirements": [
+      "Display the exact phrase Hello, World!.",
+      "Keep the greeting in a reusable function.",
+      "Do not add external dependencies."
+    ]
+  },
+  "pr": {
+    "title": "Add Hello World greeting",
+    "description": "Adds a small greeting helper and displays it on the landing page.",
+    "author": "nova-dev",
+    "sourceBranch": "nova-dev/hello-world",
+    "targetBranch": "main"
+  },
+  "languages": ["typescript"],
+  "defaultLanguage": "typescript",
+  "aiReview": {
+    "verdict": "approve",
+    "summary": "The change replaces the existing greeting with the exact required text and keeps the helper reusable. No dependency or security concerns are introduced.",
+    "findings": []
+  }
+}

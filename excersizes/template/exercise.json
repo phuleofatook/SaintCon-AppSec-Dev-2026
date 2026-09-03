@@ -1,0 +1,23 @@
+{
+  "id": "EX-00",
+  "difficulty": "easy",
+  "ticket": {
+    "title": "Replace with ticket title",
+    "description": "Replace with the attendee-facing ticket description.",
+    "requirements": ["Replace with a requirement"]
+  },
+  "pr": {
+    "title": "Replace with pull request title",
+    "description": "Replace with the attendee-facing pull request description.",
+    "author": "contributor",
+    "sourceBranch": "contributor/change",
+    "targetBranch": "main"
+  },
+  "languages": ["typescript"],
+  "defaultLanguage": "typescript",
+  "aiReview": {
+    "verdict": "approve",
+    "summary": "Replace this precomputed offline review with the expected assessment for the exercise.",
+    "findings": []
+  }
+}

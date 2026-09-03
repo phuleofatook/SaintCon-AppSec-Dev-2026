@@ -1,0 +1,40 @@
+{
+  "id": "HW-02",
+  "difficulty": "easy",
+  "ticket": {
+    "title": "Add a blast-off countdown",
+    "description": "Show passengers the remaining seconds until the Spaceways launch window opens.",
+    "requirements": [
+      "Start at 10 seconds.",
+      "Decrease the displayed value once per second.",
+      "Stop at 0 and display Blast off!."
+    ]
+  },
+  "pr": {
+    "title": "Add blast-off countdown timer",
+    "description": "Adds a reusable launch countdown helper for the departure board.",
+    "author": "nova-dev",
+    "sourceBranch": "nova-dev/blast-off-countdown",
+    "targetBranch": "main"
+  },
+  "languages": ["typescript"],
+  "defaultLanguage": "typescript",
+  "aiReview": {
+    "verdict": "deny",
+    "summary": "The countdown moves in the wrong direction and can never reach the blast-off condition, so it does not meet the ticket requirements.",
+    "findings": [
+      {
+        "severity": "high",
+        "title": "Countdown increments instead of decrementing",
+        "detail": "Each invocation adds one to the remaining seconds. Starting at 10 means the value will increase indefinitely rather than reach 0.",
+        "file": "src/countdown.ts"
+      },
+      {
+        "severity": "medium",
+        "title": "Blast-off message is unreachable",
+        "detail": "Because the counter starts at 10 and is incremented before the equality check, it cannot equal 0 and will never return the required message.",
+        "file": "src/countdown.ts"
+      }
+    ]
+  }
+}

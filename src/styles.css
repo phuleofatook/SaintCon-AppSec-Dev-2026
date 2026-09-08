@@ -232,12 +232,6 @@ button {
     color: #d1ebf6;
 }
 
-.open-status {
-    align-self: start;
-    color: #7ae29a;
-    white-space: nowrap;
-}
-
 .review-content {
     padding-top: 29px;
 }

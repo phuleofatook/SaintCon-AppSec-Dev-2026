@@ -1,0 +1,62 @@
+import { useState } from 'preact/hooks';
+import { AiReview } from '../components/AiReview';
+import { DiffView, type DiffOutputFormat } from '../components/DiffView';
+import type { ExercisePackage } from '../exercise-controller';
+
+export function ReviewPage({ exercise }: { exercise: ExercisePackage }) {
+  const [format, setFormat] = useState<DiffOutputFormat>('side-by-side');
+  const { item, changedFiles } = exercise;
+  return <>
+    <main class="review-page">
+      <a class="back" href="#home">← Challenge queue</a>
+      <section class="review-heading">
+        <div>
+          <p class="eyebrow">EXERCISE {item.id} · {item.difficulty.toUpperCase()}</p>
+          <h1>{item.pr.title}</h1>
+          <p class="byline">{item.pr.author} proposes merging <code>{item.pr.sourceBranch}</code> into <code>{item.pr.targetBranch}</code>
+          </p>
+        </div>
+      </section>
+      <section class="review-content">
+        <details class="context-panel ticket" open>
+          <summary>
+            <span>
+              <span class="section-label">TRACKING TICKET</span>
+              <strong>{item.ticket.title}</strong>
+            </span>
+            <span class="panel-toggle" aria-hidden="true">Hide ticket</span>
+          </summary>
+          <div class="panel-content">
+            <p>{item.ticket.description}</p>
+            <h3>Requirements</h3>
+            <ul>
+              {item.ticket.requirements.map((requirement) => <li key={requirement}>{requirement}</li>)}
+            </ul>
+          </div>
+        </details>
+        <section class="pull-request">
+          <div class="pr-summary">
+            <div>
+              <p class="section-label">PROPOSED PULL REQUEST</p>
+              <h2>{item.pr.title}</h2>
+              <p>{item.pr.description}</p>
+            </div>
+            <span class="files-changed">{changedFiles.length} file changed · {item.defaultLanguage}</span>
+          </div>
+          <AiReview review={item.aiReview} />
+          <DiffView exercise={exercise} format={format} onFormatChange={setFormat} />
+          <div class="decision">
+            <div>
+              <strong>Ready to make the call?</strong>
+              <span>Approve changes that should ship. Deny changes that should not.</span>
+            </div>
+            <div class="decision-buttons">
+              <button class="deny" type="button">Deny</button>
+              <button class="approve" type="button">Approve</button>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </>;
+}

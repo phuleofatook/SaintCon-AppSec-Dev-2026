@@ -22,6 +22,8 @@ export type CachedAiReview = {
 export type ChangedFile = { path: string; before: string; after: string };
 export type ExercisePackage = { slug: string; item: Exercise; changedFiles: ChangedFile[] };
 
+//TODO: solve the "tutorial" package fixation
+
 const exerciseModules = import.meta.glob<Exercise>('../excersizes/tutorial/*/exercise.json', { eager: true, import: 'default' });
 const beforeModules = import.meta.glob<string>('../excersizes/tutorial/*/*/before/**/*', { eager: true, query: '?raw', import: 'default' });
 const afterModules = import.meta.glob<string>('../excersizes/tutorial/*/*/after/**/*', { eager: true, query: '?raw', import: 'default' });

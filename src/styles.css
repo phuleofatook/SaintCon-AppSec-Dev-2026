@@ -360,24 +360,73 @@ button {
     min-width: 0;
 }
 
+.diff-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 8px 0 10px;
+    padding: 9px 11px;
+    border: 1px solid #294b60;
+    background: #10253a;
+}
+
+.format-switch {
+    display: flex;
+    gap: 2px;
+    padding: 2px;
+    background: #0b1a29;
+}
+
+.format-switch button {
+    border: 0;
+    padding: 6px 10px;
+    color: #9db3c1;
+    background: transparent;
+    cursor: pointer;
+    font: 11px ui-monospace, monospace;
+}
+
+.format-switch button[aria-pressed="true"] {
+    color: #07111f;
+    background: #8ecbe9;
+}
+
 .pull-request .d2h-wrapper {
     margin: 0;
     border: 1px solid #36596e;
     text-align: left;
     color: #c9d6df;
     background: #0d1c2c;
+    font-size: 12px;
 }
 
 .pull-request .d2h-file-header {
     height: auto;
-    padding: 10px 14px;
+    min-height: 35px;
+    padding: 7px 10px;
     border-bottom-color: #36596e;
     background: #142b3e;
 }
 
 .pull-request .d2h-file-name {
     color: #d8e9f1;
-    font: 13px ui-monospace, monospace;
+    font: 12px ui-monospace, monospace;
+}
+
+.pull-request .d2h-diff-table {
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.pull-request .d2h-code-line,
+.pull-request .d2h-code-side-line {
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.pull-request .d2h-code-line-ctn {
+    line-height: 1.4;
 }
 
 .pull-request .d2h-file-diff {
@@ -397,11 +446,27 @@ button {
 }
 
 .pull-request .d2h-ins {
-    background-color: rgba(49, 130, 86, .34);
+    border-color: #3f9b61;
+    color: #e5ffeb;
+    background-color: #245b3b;
 }
 
 .pull-request .d2h-del {
-    background-color: rgba(164, 61, 68, .28);
+    border-color: #a85860;
+    color: #ffe7e9;
+    background-color: #5b3039;
+}
+
+.pull-request .d2h-code-line ins,
+.pull-request .d2h-code-side-line ins {
+    color: #062b12;
+    background-color: #8ee6a4;
+}
+
+.pull-request .d2h-code-line del,
+.pull-request .d2h-code-side-line del {
+    color: #3c0b11;
+    background-color: #ff9da5;
 }
 
 .pull-request .d2h-info {

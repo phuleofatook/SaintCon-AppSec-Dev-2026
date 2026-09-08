@@ -1,10 +1,12 @@
-# AI Community potential collaboration
-- Live review assistant
-- Dev under review
 
 # TODO
 
-- [ ] Find a new name: "SAINTCON Spaceways — Flight 26" might cause branding problemswith he main conference
+- [ ] Find a new name: "SAINTCON Spaceways — Flight 26" might cause branding problems with he main conference
+
+## AI Community potential collaboration
+- Live review assistant
+- Dev under review
+
 
 ## UI
 - [ ] Difficulty selector
@@ -13,7 +15,9 @@
 - [ ] Reset
 
 ## Excersizes
-- [ ] Implement many more
+- [ ] Implement some
+- [ ] Implement more
+- [ ] Standardize excerize identifiers
 
 ## Stretch
 Excersizes in a full project, not out of context

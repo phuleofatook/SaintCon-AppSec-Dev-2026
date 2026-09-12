@@ -1,8 +1,18 @@
 export type Exercise = {
   id: string;
   difficulty: string;
-  ticket: { title: string; description: string; requirements: string[] };
-  pr: { title: string; description: string; author: string; sourceBranch: string; targetBranch: string };
+  ticket: { 
+    title: string; 
+    description: string; 
+    requirements: string[] 
+  };
+  pr: { 
+    title: string; 
+    description: string; 
+    author: string; 
+    sourceBranch: string; 
+    targetBranch: string 
+  };
   languages: string[];
   defaultLanguage: string;
   aiReview: CachedAiReview;
@@ -19,28 +29,39 @@ export type CachedAiReview = {
   }>;
 };
 
-export type ChangedFile = { path: string; before: string; after: string };
-export type ExercisePackage = { slug: string; item: Exercise; changedFiles: ChangedFile[] };
+export type ChangedFile = { 
+  path: string; 
+  before: string; 
+  after: string 
+};
 
-//TODO: solve the "tutorial" package fixation
+export type ExercisePackage = { 
+  slug: string; 
+  item: Exercise; 
+  changedFiles: ChangedFile[] 
+};
 
-const exerciseModules = import.meta.glob<Exercise>('../excersizes/tutorial/*/exercise.json', { eager: true, import: 'default' });
-const beforeModules = import.meta.glob<string>('../excersizes/tutorial/*/*/before/**/*', { eager: true, query: '?raw', import: 'default' });
-const afterModules = import.meta.glob<string>('../excersizes/tutorial/*/*/after/**/*', { eager: true, query: '?raw', import: 'default' });
+const exerciseModules = import.meta.glob<Exercise>('../excersizes/*/*/exercise.json', { eager: true, import: 'default' });
+const beforeModules = import.meta.glob<string>('../excersizes/*/*/*/before/**/*', { eager: true, query: '?raw', import: 'default' });
+const afterModules = import.meta.glob<string>('../excersizes/*/*/*/after/**/*', { eager: true, query: '?raw', import: 'default' });
 
 function discoverExercises(): ExercisePackage[] {
   return Object.entries(exerciseModules)
     .map(([metadataPath, item]) => {
-      const slug = metadataPath.match(/tutorial\/([^/]+)\/exercise\.json$/)?.[1];
+      const slug = metadataPath.split("/")[3];
       if (!slug) return undefined;
-      const prefix = `../excersizes/tutorial/${slug}/${item.defaultLanguage}/`;
+      const prefix = `../excersizes/${item.difficulty}/${slug}/${item.defaultLanguage}/`;
       const beforePrefix = `${prefix}before/`;
       const afterPrefix = `${prefix}after/`;
       const changedFiles = Object.entries(afterModules)
         .filter(([path]) => path.startsWith(afterPrefix))
         .map(([afterPath, after]) => {
           const path = afterPath.slice(afterPrefix.length);
-          return { path, before: beforeModules[`${beforePrefix}${path}`] ?? '', after };
+          return { 
+            path, 
+            before: beforeModules[`${beforePrefix}${path}`] ?? '', 
+            after 
+          };
         });
       return { slug, item, changedFiles };
     })

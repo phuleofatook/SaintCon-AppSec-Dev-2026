@@ -3,9 +3,16 @@ import { AiReview } from '../components/AiReview';
 import { DiffView, type DiffOutputFormat } from '../components/DiffView';
 import type { ExercisePackage } from '../exercise-controller';
 
+function score(choice: string, exercise: ExercisePackage) {
+  //TODO: score the excercise
+  console.log(`The user chose ${choice}`);
+}
+
+
 export function ReviewPage({ exercise }: { exercise: ExercisePackage }) {
   const [format, setFormat] = useState<DiffOutputFormat>('side-by-side');
   const { item, changedFiles } = exercise;
+
   return <>
     <main class="review-page">
       <a class="back" href="#home">← Challenge queue</a>
@@ -51,8 +58,9 @@ export function ReviewPage({ exercise }: { exercise: ExercisePackage }) {
               <span>Approve changes that should ship. Deny changes that should not.</span>
             </div>
             <div class="decision-buttons">
-              <button class="deny" type="button">Deny</button>
-              <button class="approve" type="button">Approve</button>
+              <button class="deny" type="button" onClick={() => score('deny', exercise)}>Deny</button>
+              {item.difficulty === 'medium' ? <button class="maybe" type="button" onClick={() => score('maybe', exercise)}>Maybe</button> : ''}
+              <button class="approve" type="button" onClick={() => score('approve', exercise)}>Approve</button>
             </div>
           </div>
         </section>

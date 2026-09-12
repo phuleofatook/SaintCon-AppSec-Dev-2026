@@ -509,6 +509,12 @@ button {
     background: #3c1e2a;
 }
 
+.maybe {
+    border: 1px solid #a88a3a;
+    color: #1a1505;
+    background: #e6c65c;
+}
+
 .approve {
     border: 1px solid #4e9f71;
     color: #06140c;

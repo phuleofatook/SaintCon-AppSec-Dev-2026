@@ -9,12 +9,23 @@ export function HomePage({ controller }: { controller: ExerciseController }) {
       <h1>Clear your change<br />for <em>launch.</em></h1>
       <p class="intro">Review a proposed pull request, consider the mission brief, and make the call. Will it fly?</p>
 
-      {firstExercise && <a class="primary-action" href={`#review/${firstExercise.slug}`}>Begin a review <span>→</span></a>}
 
-      <p class="hint">One ticket. One pull request. Your decision.</p>
+      {
+/*
+      //TODO: make this a random list rather than a hard coded specific one
+      firstExercise && <a class="primary-action" href={`#review/${firstExercise.slug}`}>Begin a review <span>→</span></a>
+  */
+      }
+      
+
+
       <section class="tutorial-levels" aria-label="Tutorial levels">
         <p class="section-label">TUTORIAL LEVELS</p>
-        {exercises.map((exercise) => <ChallengeStub exercise={exercise}/>)}
+        {exercises.map((exercise) => exercise.item.difficulty == 'tutorial' ? <ChallengeStub exercise={exercise}/>:"")}
+      </section>
+      <section class="tutorial-levels" aria-label="Tutorial levels">
+        <p class="section-label">Specific Challenges</p>
+        {exercises.map((exercise) => exercise.item.difficulty != 'tutorial' ? <ChallengeStub exercise={exercise}/>:"")}
       </section>
       <section class="briefing">
         <article>

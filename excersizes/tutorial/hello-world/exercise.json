@@ -1,6 +1,6 @@
 {
-  "id": "HW-01",
-  "difficulty": "easy",
+  "id": "TUT-01",
+  "difficulty": "tutorial",
   "ticket": {
     "title": "Add a Hello World greeting",
     "description": "Create the first greeting shown when a passenger opens the Spaceways application.",

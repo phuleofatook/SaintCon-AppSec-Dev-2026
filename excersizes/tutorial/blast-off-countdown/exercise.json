@@ -1,6 +1,6 @@
 {
-  "id": "HW-02",
-  "difficulty": "easy",
+  "id": "TUT-02",
+  "difficulty": "tutorial",
   "ticket": {
     "title": "Add a blast-off countdown",
     "description": "Show passengers the remaining seconds until the Spaceways launch window opens.",

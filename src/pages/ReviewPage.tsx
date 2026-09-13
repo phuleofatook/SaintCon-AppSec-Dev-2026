@@ -1,11 +1,33 @@
 import { useState } from 'preact/hooks';
 import { AiReview } from '../components/AiReview';
 import { DiffView, type DiffOutputFormat } from '../components/DiffView';
-import type { ExercisePackage } from '../exercise-controller';
+import type { Choise } from '../types/StandardTypes'
+import type { ExercisePackage } from '../types/StandardTypes'
 
-function score(choice: string, exercise: ExercisePackage) {
-  //TODO: score the excercise
-  console.log(`The user chose ${choice}`);
+function score(choice: Choise, exercise: ExercisePackage) {
+
+  if (!exercise.item.proposedAnswer){
+    console.warn(`This excersize does not have a proposed answer`);
+    return;
+  }
+
+  console.log(`The user chose ${choice} and the recommended solution was ${exercise.item.proposedAnswer.answer}`);
+  if (choice !== exercise.item.proposedAnswer.answer) {
+
+    //TODO: make this a nice modal rather than a plain alert. OR make an in page feedback
+    alert(`We recommend ${prettyPrintChoise(exercise.item.proposedAnswer.answer)} for this reason: ${exercise.item.proposedAnswer.reason}`);
+  }
+
+  function prettyPrintChoise(answer:any) {
+    switch (answer) {
+      case Choise.ACCEPT: return 'Approve';
+      case Choise.REJECT: return 'Deny';
+      case Choise.MAYBE: return 'Maybe';
+    }
+
+    console.warn(`Unable to pretty print ${answer}`);
+    return answer;
+  }
 }
 
 
@@ -58,9 +80,9 @@ export function ReviewPage({ exercise }: { exercise: ExercisePackage }) {
               <span>Approve changes that should ship. Deny changes that should not.</span>
             </div>
             <div class="decision-buttons">
-              <button class="deny" type="button" onClick={() => score('deny', exercise)}>Deny</button>
-              {item.difficulty === 'medium' ? <button class="maybe" type="button" onClick={() => score('maybe', exercise)}>Maybe</button> : ''}
-              <button class="approve" type="button" onClick={() => score('approve', exercise)}>Approve</button>
+              <button class="deny" type="button" onClick={() => score(Choise.DENY, exercise)}>Deny</button>
+              {item.difficulty === 'hard' ? <button class="maybe" type="button" onClick={() => score(Choise.MAYBE, exercise)}>Maybe</button> : ''}
+              <button class="approve" type="button" onClick={() => score(Choise.ACCEPT, exercise)}>Approve</button>
             </div>
           </div>
         </section>

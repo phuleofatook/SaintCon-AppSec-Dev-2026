@@ -1,5 +1,5 @@
 import { ChallengeStub } from '../components/ChallengeStub';
-import type { ExerciseController } from '../exercise-controller';
+import type { ExerciseController } from '../services/exercise-controller';
 
 export function HomePage({ controller }: { controller: ExerciseController }) {
   const exercises = controller.listExercises();
@@ -23,10 +23,15 @@ export function HomePage({ controller }: { controller: ExerciseController }) {
         <p class="section-label">TUTORIAL LEVELS</p>
         {exercises.map((exercise) => exercise.item.difficulty == 'tutorial' ? <ChallengeStub exercise={exercise}/>:"")}
       </section>
+
+{
+//This is just a quick picker for testing.  Possibly in the future it could be a legit entry point (specific one vs random set)
+}
       <section class="tutorial-levels" aria-label="Tutorial levels">
         <p class="section-label">Specific Challenges</p>
         {exercises.map((exercise) => exercise.item.difficulty != 'tutorial' ? <ChallengeStub exercise={exercise}/>:"")}
       </section>
+
       <section class="briefing">
         <article>
           <b>01</b>

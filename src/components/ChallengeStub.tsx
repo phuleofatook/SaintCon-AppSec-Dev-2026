@@ -1,4 +1,4 @@
-import type { ExercisePackage } from '../exercise-controller';
+import type { ExercisePackage } from '../services/exercise-controller';
 
 export function ChallengeStub({ exercise }: { exercise: ExercisePackage }) {
   const { item, slug } = exercise;

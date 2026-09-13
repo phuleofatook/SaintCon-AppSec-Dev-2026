@@ -23,5 +23,9 @@
     "verdict": "approve",
     "summary": "The change replaces the existing greeting with the exact required text and keeps the helper reusable. No dependency or security concerns are introduced.",
     "findings": []
+  },
+  "proposedAnswer": {
+    "answer": "Accept",
+    "reason": "Purely textual change that meets the requirements"
   }
 }

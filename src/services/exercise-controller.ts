@@ -1,49 +1,46 @@
-export type Exercise = {
-  id: string;
-  difficulty: string;
-  ticket: { 
-    title: string; 
-    description: string; 
-    requirements: string[] 
-  };
-  pr: { 
-    title: string; 
-    description: string; 
-    author: string; 
-    sourceBranch: string; 
-    targetBranch: string 
-  };
-  languages: string[];
-  defaultLanguage: string;
-  aiReview: CachedAiReview;
-};
+import type { ExercisePackage, Exercise } from '../types/StandardTypes';
+import { Choise } from '../types/StandardTypes';
 
-export type CachedAiReview = {
-  verdict: 'approve' | 'deny';
-  summary: string;
-  findings: Array<{
-    severity: 'critical' | 'high' | 'medium' | 'low' | 'info';
-    title: string;
-    detail: string;
-    file?: string;
-  }>;
-};
+const exerciseModules = import.meta.glob<Exercise>('../../excersizes/*/*/exercise.json', { eager: true, import: 'default' });
+const beforeModules = import.meta.glob<string>('../../excersizes/*/*/*/before/**/*', { eager: true, query: '?raw', import: 'default' });
+const afterModules = import.meta.glob<string>('../../excersizes/*/*/*/after/**/*', { eager: true, query: '?raw', import: 'default' });
 
-export type ChangedFile = { 
-  path: string; 
-  before: string; 
-  after: string 
-};
 
-export type ExercisePackage = { 
-  slug: string; 
-  item: Exercise; 
-  changedFiles: ChangedFile[] 
-};
+function normalizeAnswer(input: any):Choise {
+  if (input === undefined) {
+    console.error(`Unable to normalize answer ${input}.  It appears to be undefined`);
+  }
 
-const exerciseModules = import.meta.glob<Exercise>('../excersizes/*/*/exercise.json', { eager: true, import: 'default' });
-const beforeModules = import.meta.glob<string>('../excersizes/*/*/*/before/**/*', { eager: true, query: '?raw', import: 'default' });
-const afterModules = import.meta.glob<string>('../excersizes/*/*/*/after/**/*', { eager: true, query: '?raw', import: 'default' });
+  console.debug(`Attempting to normalize ${input}`);
+
+  switch (input.toLowerCase()) {
+    case "accept": return Choise.ACCEPT;
+    case "approve": return Choise.ACCEPT;
+    case "apply": return Choise.ACCEPT;
+    
+    case "reject": return Choise.REJECT;
+    case "deny": return Choise.REJECT;
+
+    case "maybe": return Choise.MAYBE
+
+  }
+
+  throw new Error(`Error normalizing ${input} to a choise`);
+}
+
+function normalizeExercise(input: Exercise):Exercise {
+
+  if (input.proposedAnswer)
+  return {
+    ...input,
+    proposedAnswer: {
+      ...input.proposedAnswer,
+      answer: normalizeAnswer(input.proposedAnswer.answer)
+    }
+  }
+
+  return input;
+}
 
 function discoverExercises(): ExercisePackage[] {
   return Object.entries(exerciseModules)
@@ -63,7 +60,7 @@ function discoverExercises(): ExercisePackage[] {
             after 
           };
         });
-      return { slug, item, changedFiles };
+      return { slug, item:normalizeExercise(item), changedFiles };
     })
     .filter((exercise): exercise is ExercisePackage => Boolean(exercise))
     .sort((left, right) => left.item.id.localeCompare(right.item.id));
@@ -72,6 +69,8 @@ function discoverExercises(): ExercisePackage[] {
 export class ExerciseController {
   private readonly exercises = discoverExercises();
   private currentExercise?: ExercisePackage;
+
+  //TODO: hook these up to the review page
   private completedReviews = 0;
   private correctReviews = 0;
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { ExerciseController } from './exercise-controller';
+import { ExerciseController } from './services/exercise-controller';
 import { HomePage } from './pages/HomePage';
 import { ReviewPage } from './pages/ReviewPage';
 import { Header } from './components/Header';

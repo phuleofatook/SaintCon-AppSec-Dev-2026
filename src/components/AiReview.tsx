@@ -1,4 +1,4 @@
-import type { CachedAiReview } from '../exercise-controller';
+import type { CachedAiReview } from '../services/exercise-controller';
 
 export function AiReview({ review }: { review: CachedAiReview }) {
   const decision = review.verdict === 'approve' ? 'Approve' : 'Deny';
@@ -6,7 +6,7 @@ export function AiReview({ review }: { review: CachedAiReview }) {
     <summary>
       <span>
         <span class="section-label">OFFLINE AI REVIEW</span>
-        <strong>Cached review assistant</strong>
+        <strong>Review assistant</strong>
       </span>
       <span class="panel-toggle" aria-hidden="true">Show review</span>
     </summary>

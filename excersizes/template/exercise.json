@@ -19,5 +19,9 @@
     "verdict": "approve",
     "summary": "Replace this precomputed offline review with the expected assessment for the exercise.",
     "findings": []
+  },
+  "proposedAnswer": {
+    "answer": "approve",
+    "reason": "Replace with a justification for the accepted answer"
   }
 }

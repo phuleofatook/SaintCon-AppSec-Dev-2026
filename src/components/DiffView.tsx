@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { Diff2HtmlUI } from 'diff2html/lib-esm/ui/js/diff2html-ui-slim';
 import { createTwoFilesPatch } from 'diff';
-import type { ExercisePackage } from '../exercise-controller';
+import type { ExercisePackage } from '../types/StandardTypes';
 
 export type DiffOutputFormat = 'side-by-side' | 'line-by-line';
 

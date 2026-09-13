@@ -36,5 +36,9 @@
         "file": "src/countdown.ts"
       }
     ]
+  },
+  "proposedAnswer": {
+    "answer": "reject",
+    "reason": "Logic issue: Increments rather than decrements"
   }
 }

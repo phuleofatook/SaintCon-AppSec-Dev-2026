@@ -1,6 +1,9 @@
 import type { ExercisePackage, Exercise } from '../types/StandardTypes';
 import { Choise } from '../types/StandardTypes';
 
+const excersizesLocation = '../../excersizes';
+
+//Unfortunatly these require string literals so can not use a parameterized version I would like to keep a single source of truth
 const exerciseModules = import.meta.glob<Exercise>('../../excersizes/*/*/exercise.json', { eager: true, import: 'default' });
 const beforeModules = import.meta.glob<string>('../../excersizes/*/*/*/before/**/*', { eager: true, query: '?raw', import: 'default' });
 const afterModules = import.meta.glob<string>('../../excersizes/*/*/*/after/**/*', { eager: true, query: '?raw', import: 'default' });
@@ -45,9 +48,9 @@ function normalizeExercise(input: Exercise):Exercise {
 function discoverExercises(): ExercisePackage[] {
   return Object.entries(exerciseModules)
     .map(([metadataPath, item]) => {
-      const slug = metadataPath.split("/")[3];
+      const slug = metadataPath.split("/")[4];
       if (!slug) return undefined;
-      const prefix = `../excersizes/${item.difficulty}/${slug}/${item.defaultLanguage}/`;
+      const prefix = `${excersizesLocation}/${item.difficulty}/${slug}/${item.defaultLanguage}/`;
       const beforePrefix = `${prefix}before/`;
       const afterPrefix = `${prefix}after/`;
       const changedFiles = Object.entries(afterModules)
@@ -57,7 +60,7 @@ function discoverExercises(): ExercisePackage[] {
           return { 
             path, 
             before: beforeModules[`${beforePrefix}${path}`] ?? '', 
-            after 
+            after
           };
         });
       return { slug, item:normalizeExercise(item), changedFiles };

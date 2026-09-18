@@ -1,0 +1,27 @@
+{
+  "id": "H-00",
+  "difficulty": "hard",
+  "ticket": {
+    "title": "Identify sus crew",
+    "description": "Everyone that the system should detect as sus is inocent and everyone who is innocent is being marked as sus.  We need to fix it so that we stop throwing innocent people out the air lock!",
+    "requirements": ["Return the first suspicious crew member"]
+  },
+  "pr": {
+    "title": "Fixed logic issue in SQL",
+    "description": "Stray NOT causing issues",
+    "author": "Ammon Yus",
+    "sourceBranch": "contributor/change",
+    "targetBranch": "main"
+  },
+  "languages": ["typescript"],
+  "defaultLanguage": "typescript",
+ "aiReview": {
+    "verdict": "approve",
+    "summary": "The pull request fixes the inverted suspiciousness condition. The ticket requires returning a suspicious crew member, and the query now filters for p.sus rather than NOT p.sus. The change directly addresses the described logic issue.",
+    "findings": []
+  },
+  "proposedAnswer": {
+    "answer": "approve",
+    "reason": "The code is better, but not perfect.  The SQL injection remains, but the functional requirement has been fixed.  Whether this is acceptable or not depends on your risk tollerance."
+  }
+}

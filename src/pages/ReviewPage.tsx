@@ -33,6 +33,7 @@ function score(choice: Choice, exercise: ExercisePackage) {
 
 export function ReviewPage({ exercise }: { exercise: ExercisePackage }) {
   const [format, setFormat] = useState<DiffOutputFormat>('side-by-side');
+  const [contextSize, setContextSize] = useState<number>(10);
   const { item, changedFiles } = exercise;
 
   return <>
@@ -73,7 +74,10 @@ export function ReviewPage({ exercise }: { exercise: ExercisePackage }) {
             <span class="files-changed">{changedFiles.length} file changed · {item.defaultLanguage}</span>
           </div>
           <AiReview review={item.aiReview} />
-          <DiffView exercise={exercise} format={format} onFormatChange={setFormat} />
+          <DiffView exercise={exercise} 
+            format={format} onFormatChange={setFormat} 
+            contextSize={contextSize} onContextSizeChange={setContextSize}
+          />
           <div class="decision">
             <div>
               <strong>Ready to make the call?</strong>

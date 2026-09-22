@@ -1,0 +1,27 @@
+{
+  "id": "E-00",
+  "difficulty": "easy",
+  "ticket": {
+    "title": "Fetch schedules",
+    "description": "Get the schedule for each flight",
+    "requirements": ["Given a flight ID return the next flight"]
+  },
+  "pr": {
+    "title": "Flight Schedule",
+    "description": "",
+    "author": "StackOverflow_Copypaster",
+    "sourceBranch": "contributor/change",
+    "targetBranch": "main"
+  },
+  "languages": ["typescript"],
+  "defaultLanguage": "typescript",
+ "aiReview": {
+    "verdict": "",
+    "summary": "",
+    "findings": []
+  },
+  "proposedAnswer": {
+    "answer": "deny",
+    "reason": "New code introduces a new SQLi vilnerability"
+  }
+}

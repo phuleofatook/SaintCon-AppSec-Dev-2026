@@ -9,7 +9,7 @@
   "pr": {
     "title": "Fixed logic issue in SQL",
     "description": "Stray NOT causing issues",
-    "author": "Ammon Yus",
+    "author": "Ammon Gus",
     "sourceBranch": "contributor/change",
     "targetBranch": "main"
   },

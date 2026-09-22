@@ -1,8 +1,7 @@
 import { useState } from 'preact/hooks';
 import { AiReview } from '../components/AiReview';
 import { DiffView, type DiffOutputFormat } from '../components/DiffView';
-import type { Choice } from '../types/StandardTypes'
-import type { ExercisePackage } from '../types/StandardTypes'
+import { Choice, type ExercisePackage } from '../types/StandardTypes'
 
 function score(choice: Choice, exercise: ExercisePackage) {
 

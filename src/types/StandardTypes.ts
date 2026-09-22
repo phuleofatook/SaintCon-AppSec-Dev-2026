@@ -21,14 +21,14 @@ export type Exercise = {
   proposedAnswer: ProposedAnswer;
 };
 
-export enum Choise {
+export enum Choice {
   ACCEPT,
   REJECT,
   MAYBE,
 }
 
 export type ProposedAnswer = {
-  answer: Choise;
+  answer: Choice;
   reason: string;
 }
 

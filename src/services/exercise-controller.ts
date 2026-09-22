@@ -1,5 +1,5 @@
 import type { ExercisePackage, Exercise } from '../types/StandardTypes';
-import { Choise } from '../types/StandardTypes';
+import { Choice } from '../types/StandardTypes';
 
 const excersizesLocation = '../../excersizes';
 
@@ -9,7 +9,7 @@ const beforeModules = import.meta.glob<string>('../../excersizes/*/*/*/before/**
 const afterModules = import.meta.glob<string>('../../excersizes/*/*/*/after/**/*', { eager: true, query: '?raw', import: 'default' });
 
 
-function normalizeAnswer(input: any):Choise {
+function normalizeAnswer(input: any):Choice {
   if (input === undefined) {
     console.error(`Unable to normalize answer ${input}.  It appears to be undefined`);
   }
@@ -17,18 +17,18 @@ function normalizeAnswer(input: any):Choise {
   console.debug(`Attempting to normalize ${input}`);
 
   switch (input.toLowerCase()) {
-    case "accept": return Choise.ACCEPT;
-    case "approve": return Choise.ACCEPT;
-    case "apply": return Choise.ACCEPT;
+    case "accept": return Choice.ACCEPT;
+    case "approve": return Choice.ACCEPT;
+    case "apply": return Choice.ACCEPT;
     
-    case "reject": return Choise.REJECT;
-    case "deny": return Choise.REJECT;
+    case "reject": return Choice.REJECT;
+    case "deny": return Choice.REJECT;
 
-    case "maybe": return Choise.MAYBE
+    case "maybe": return Choice.MAYBE
 
   }
 
-  throw new Error(`Error normalizing ${input} to a choise`);
+  throw new Error(`Error normalizing ${input} to a Choice`);
 }
 
 function normalizeExercise(input: Exercise):Exercise {

@@ -3,7 +3,7 @@ import { Choice } from '../types/StandardTypes';
 
 const excersizesLocation = '../../excersizes';
 
-//Unfortunatly these require string literals so can not use a parameterized version I would like to keep a single source of truth
+//Unfortunatly these require string literals so can not use a parameterized version to keep a single source of truth on the path prefix
 const exerciseModules = import.meta.glob<Exercise>('../../excersizes/*/*/exercise.json', { eager: true, import: 'default' });
 const beforeModules = import.meta.glob<string>('../../excersizes/*/*/*/before/**/*', { eager: true, query: '?raw', import: 'default' });
 const afterModules = import.meta.glob<string>('../../excersizes/*/*/*/after/**/*', { eager: true, query: '?raw', import: 'default' });
@@ -13,8 +13,6 @@ function normalizeAnswer(input: any):Choice {
   if (input === undefined) {
     console.error(`Unable to normalize answer ${input}.  It appears to be undefined`);
   }
-
-  console.debug(`Attempting to normalize ${input}`);
 
   switch (input.toLowerCase()) {
     case "accept": return Choice.ACCEPT;

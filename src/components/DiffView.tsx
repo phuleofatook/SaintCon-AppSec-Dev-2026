@@ -11,13 +11,20 @@ export type DiffViewProps = {
   format: DiffOutputFormat; 
   onFormatChange: (format: DiffOutputFormat) => void 
 
+  highlight: boolean;
+  onHighlightChange: (highlight: boolean) => void 
+
   contextSize: number; 
   onContextSizeChange: (contextSize: number) => void 
 
 }
 
 export function DiffView(props: DiffViewProps) {
-  const {exercise, format, onFormatChange, contextSize, onContextSizeChange} = props;
+  const {exercise, 
+    format, onFormatChange, 
+    contextSize, onContextSizeChange, 
+    highlight, onHighlightChange
+  } = props;
 
   const target = useRef<HTMLDivElement>(null);
 
@@ -35,9 +42,9 @@ export function DiffView(props: DiffViewProps) {
       drawFileList: false,  //TODO: show.  Requires getting the links on it to work
       outputFormat: format, 
       matching: 'lines',
-      highlight: true
+      highlight: highlight ?? false
     }).draw();
-  }, [exercise, format, contextSize]);
+  }, [exercise, format, contextSize, highlight]);
 
   return <>
     <div class="diff-toolbar" aria-label="Diff output format">
@@ -48,7 +55,7 @@ export function DiffView(props: DiffViewProps) {
       </div>
     </div>
 
-    <div class="diff-toolbar" aria-label="Diff output format">
+    <div class="diff-toolbar" aria-label="Diff context size">
       <span class="section-label">CONTEXT SIZE</span>
       <select value={contextSize} 
       onChange={(e) => {
@@ -63,6 +70,13 @@ export function DiffView(props: DiffViewProps) {
         ))}
 
       </select>
+    </div>
+
+    <div class="diff-toolbar" aria-label="Syntax highlighting">
+      <span class="section-label">SYNTAX HIGHLIGHTING</span>
+      <div class="format-switch" role="group">
+        <input type="checkbox" checked={highlight} onChange={(e)=>onHighlightChange(e.currentTarget.checked)}/>
+      </div>
     </div>
 
     <div ref={target} aria-label="Proposed code changes" />

@@ -33,6 +33,7 @@ function score(choice: Choice, exercise: ExercisePackage) {
 export function ReviewPage({ exercise }: { exercise: ExercisePackage }) {
   const [format, setFormat] = useState<DiffOutputFormat>('side-by-side');
   const [contextSize, setContextSize] = useState<number>(10);
+  const [highlight, setHighlight] = useState<boolean>(true);
   const { item, changedFiles } = exercise;
 
   return <>
@@ -76,6 +77,7 @@ export function ReviewPage({ exercise }: { exercise: ExercisePackage }) {
           <DiffView exercise={exercise} 
             format={format} onFormatChange={setFormat} 
             contextSize={contextSize} onContextSizeChange={setContextSize}
+            highlight={highlight} onHighlightChange={setHighlight}
           />
           <div class="decision">
             <div>
@@ -83,7 +85,7 @@ export function ReviewPage({ exercise }: { exercise: ExercisePackage }) {
               <span>Approve changes that should ship. Deny changes that should not.</span>
             </div>
             <div class="decision-buttons">
-              <button class="deny" type="button" onClick={() => score(Choice.DENY, exercise)}>Deny</button>
+              <button class="deny" type="button" onClick={() => score(Choice.REJECT, exercise)}>Deny</button>
               {item.difficulty === 'hard' ? <button class="maybe" type="button" onClick={() => score(Choice.MAYBE, exercise)}>Maybe</button> : ''}
               <button class="approve" type="button" onClick={() => score(Choice.ACCEPT, exercise)}>Approve</button>
             </div>

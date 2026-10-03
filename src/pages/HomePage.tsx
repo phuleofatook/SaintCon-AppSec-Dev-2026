@@ -3,7 +3,8 @@ import type { ExerciseController } from '../services/exercise-controller';
 
 export function HomePage({ controller }: { controller: ExerciseController }) {
   const exercises = controller.listExercises();
-  const firstExercise = exercises[0];
+  const languages = controller.listLanguages();
+
   return <>
     <main class="launchpad">
       <h1>Clear your change<br />for <em>launch.</em></h1>

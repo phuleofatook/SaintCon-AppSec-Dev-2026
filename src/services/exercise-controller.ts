@@ -67,16 +67,32 @@ function discoverExercises(): ExercisePackage[] {
     .sort((left, right) => left.item.id.localeCompare(right.item.id));
 }
 
+function detectLanguages(excersizes : ExercisePackage[]): string[] {
+  const languages = new Set<string>();
+
+  for (const excersize of excersizes) {
+    excersize.item.languages.forEach(language => languages.add(language));
+  }
+
+  return [...languages];
+}
+
 export class ExerciseController {
   private readonly exercises = discoverExercises();
-  private currentExercise?: ExercisePackage;
+  private readonly languages = detectLanguages(this.exercises);
 
-  //TODO: hook these up to the review page
-  private completedReviews = 0;
-  private correctReviews = 0;
+  private currentExercise?: ExercisePackage;
+  
+  listLanguages() : readonly string[] {
+    return this.languages
+  }
 
   listExercises(): readonly ExercisePackage[] {
     return this.exercises;
+  }
+
+  listExercisesForLanguage(language : string): readonly ExercisePackage[] {
+    return this.exercises.filter(e=>e.item.languages.includes(language));
   }
 
   selectExercise(slug: string): ExercisePackage | undefined {
@@ -84,7 +100,6 @@ export class ExerciseController {
     return this.currentExercise;
   }
 
-  getScore() {
-    return { completedReviews: this.completedReviews, correctReviews: this.correctReviews };
-  }
+
+
 }

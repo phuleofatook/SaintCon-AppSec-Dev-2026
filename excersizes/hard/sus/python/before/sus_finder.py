@@ -19,9 +19,9 @@ class Person:
 async def get_suspicious_crew(personId: str) -> Person | None:
     sql = f"""
         SELECT p.person_id, p.first_name, p.last_name, p.sus, r.title
-        FROM person p,
-            customers c USING (person_id)
-            role r USING (person_id)
+        FROM person p
+            JOIN customers c USING (person_id)
+            JOIN role r USING (person_id)
         WHERE p.person_id = {personId}
             AND NOT p.sus
     """

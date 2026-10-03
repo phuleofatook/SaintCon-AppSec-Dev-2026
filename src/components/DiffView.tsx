@@ -47,37 +47,33 @@ export function DiffView(props: DiffViewProps) {
   }, [exercise, format, contextSize, highlight]);
 
   return <>
-    <div class="diff-toolbar" aria-label="Diff output format">
-      <span class="section-label">OUTPUT FORMAT</span>
-      <div class="format-switch" role="group">
-        <button type="button" aria-pressed={format === 'side-by-side'} onClick={() => onFormatChange('side-by-side')}>Side by side</button>
-        <button type="button" aria-pressed={format === 'line-by-line'} onClick={() => onFormatChange('line-by-line')}>Line by line</button>
+    <details class="diff-options">
+      <summary>Display options</summary>
+      <div class="diff-options-controls">
+        <div class="diff-option">
+          <span class="section-label">OUTPUT FORMAT</span>
+          <span class="format-switch" role="group" aria-label="Diff output format">
+            <button type="button" aria-pressed={format === 'side-by-side'} onClick={() => onFormatChange('side-by-side')}>Side by side</button>
+            <button type="button" aria-pressed={format === 'line-by-line'} onClick={() => onFormatChange('line-by-line')}>Line by line</button>
+          </span>
+        </div>
+        <div class="diff-option">
+          <span class="section-label">CONTEXT LINES</span>
+          <select aria-label="Context lines" value={contextSize} onChange={(e) => {
+            const parsed = Number(e.currentTarget.value);
+            onContextSizeChange(!Number.isNaN(parsed) ? parsed : 5);
+          }}>
+            {possibleContextSizes.map((possibleContextSize) => (
+              <option key={possibleContextSize} value={possibleContextSize}>{possibleContextSize}</option>
+            ))}
+          </select>
+        </div>
+        <label class="diff-option diff-highlight-option">
+          <span class="section-label">SYNTAX HIGHLIGHTING</span>
+          <input aria-label="Syntax highlighting" type="checkbox" checked={highlight} onChange={(e) => onHighlightChange(e.currentTarget.checked)} />
+        </label>
       </div>
-    </div>
-
-    <div class="diff-toolbar" aria-label="Diff context size">
-      <span class="section-label">CONTEXT SIZE</span>
-      <select value={contextSize} 
-      onChange={(e) => {
-        const parsed = Number(e.currentTarget.value);
-        onContextSizeChange(!Number.isNaN(parsed) ? parsed : 5);
-      }}>
-        <option value="">Number of Lines</option>
-        {possibleContextSizes.map((possibleContextSize) => (
-          <option key={possibleContextSize} value={possibleContextSize}>
-            {possibleContextSize}
-          </option>
-        ))}
-
-      </select>
-    </div>
-
-    <div class="diff-toolbar" aria-label="Syntax highlighting">
-      <span class="section-label">SYNTAX HIGHLIGHTING</span>
-      <div class="format-switch" role="group">
-        <input type="checkbox" checked={highlight} onChange={(e)=>onHighlightChange(e.currentTarget.checked)}/>
-      </div>
-    </div>
+    </details>
 
     <div ref={target} aria-label="Proposed code changes" />
   </>;

@@ -1,4 +1,4 @@
-import type { CachedAiReview } from '../services/exercise-controller';
+import { CachedAiReview } from "../types/StandardTypes";
 
 export function AiReview({ review }: { review: CachedAiReview }) {
   const decision = review.verdict === 'approve' ? 'Approve' : 'Deny';

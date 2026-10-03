@@ -68,17 +68,16 @@ export function ReviewPage({ exercise }: { exercise: ExercisePackage }) {
           <div class="pr-summary">
             <div>
               <p class="section-label">PROPOSED PULL REQUEST</p>
-              <h2>{item.pr.title}</h2>
               <p>{item.pr.description}</p>
             </div>
-            <span class="files-changed">{changedFiles.length} file changed · {item.defaultLanguage}</span>
+            <span class="files-changed">{changedFiles.length} file changed · {exercise.language}</span>
           </div>
-          <AiReview review={item.aiReview} />
           <DiffView exercise={exercise} 
             format={format} onFormatChange={setFormat} 
             contextSize={contextSize} onContextSizeChange={setContextSize}
             highlight={highlight} onHighlightChange={setHighlight}
           />
+          <AiReview review={item.aiReview} />
           <div class="decision">
             <div>
               <strong>Ready to make the call?</strong>

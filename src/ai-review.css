@@ -1,6 +1,15 @@
 .ai-review {
-    border-color: #496f8b;
-    background: linear-gradient(135deg, rgba(21, 57, 82, .96), rgba(12, 30, 47, .96));
+    margin-bottom: 12px;
+    border-color: #294b60;
+    background: rgba(17, 42, 59, .42);
+}
+
+.ai-review summary {
+    padding: 10px 14px;
+}
+
+.ai-review summary strong {
+    font-size: 14px;
 }
 
 .ai-disclaimer {
@@ -104,4 +113,53 @@
 
 .ai-empty {
     margin: 14px 0 0;
+}
+
+html[data-theme="light"] .ai-review {
+    border-color: #c5d3dc;
+    background: rgba(239, 247, 250, .72);
+}
+
+html[data-theme="light"] .ai-disclaimer,
+html[data-theme="light"] .ai-verdict span {
+    color: #526c7d;
+}
+
+html[data-theme="light"] .ai-findings li {
+    border-color: rgba(37, 71, 91, .18);
+}
+
+html[data-theme="light"] .ai-findings strong {
+    color: #20394b;
+}
+
+html[data-theme="light"] .ai-findings code {
+    color: #075b9a;
+}
+
+html[data-theme="light"] .ai-verdict-approve {
+    color: #21623a;
+    background: #e4f4e9;
+}
+
+html[data-theme="light"] .ai-verdict-deny {
+    color: #9a3b27;
+    background: #fff0eb;
+}
+
+html[data-theme="light"] .severity-high,
+html[data-theme="light"] .severity-critical {
+    color: #7e2028;
+    background: #f5dadd;
+}
+
+html[data-theme="light"] .severity-medium {
+    color: #684b00;
+    background: #f5eccd;
+}
+
+html[data-theme="light"] .severity-low,
+html[data-theme="light"] .severity-info {
+    color: #174a68;
+    background: #dcecf5;
 }

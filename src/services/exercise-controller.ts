@@ -48,23 +48,26 @@ function discoverExercises(): ExercisePackage[] {
     .map(([metadataPath, item]) => {
       const slug = metadataPath.split("/")[4];
       if (!slug) return undefined;
-      const prefix = `${excersizesLocation}/${item.difficulty}/${slug}/${item.defaultLanguage}/`;
-      const beforePrefix = `${prefix}before/`;
-      const afterPrefix = `${prefix}after/`;
-      const changedFiles = Object.entries(afterModules)
-        .filter(([path]) => path.startsWith(afterPrefix))
-        .map(([afterPath, after]) => {
-          const path = afterPath.slice(afterPrefix.length);
-          return { 
-            path, 
-            before: beforeModules[`${beforePrefix}${path}`] ?? '', 
-            after
-          };
-        });
-      return { slug, item:normalizeExercise(item), changedFiles };
+      return item.languages.flatMap((language) => {
+        const prefix = `${excersizesLocation}/${item.difficulty}/${slug}/${language}/`;
+        const beforePrefix = `${prefix}before/`;
+        const afterPrefix = `${prefix}after/`;
+        const changedFiles = Object.entries(afterModules)
+          .filter(([path]) => path.startsWith(afterPrefix))
+          .map(([afterPath, after]) => {
+            const path = afterPath.slice(afterPrefix.length);
+            return {
+              path,
+              before: beforeModules[`${beforePrefix}${path}`] ?? '',
+              after
+            };
+          });
+        return changedFiles.length > 0 ? [{ slug, language, item: normalizeExercise(item), changedFiles }] : [];
+      });
     })
+    .flat()
     .filter((exercise): exercise is ExercisePackage => Boolean(exercise))
-    .sort((left, right) => left.item.id.localeCompare(right.item.id));
+    .sort((left, right) => left.item.id.localeCompare(right.item.id) || left.language.localeCompare(right.language));
 }
 
 function detectLanguages(excersizes : ExercisePackage[]): string[] {
@@ -92,11 +95,20 @@ export class ExerciseController {
   }
 
   listExercisesForLanguage(language : string): readonly ExercisePackage[] {
-    return this.exercises.filter(e=>e.item.languages.includes(language));
+    return this.exercises.filter((exercise) => exercise.language === language);
   }
 
-  selectExercise(slug: string): ExercisePackage | undefined {
-    this.currentExercise = this.exercises.find((exercise) => exercise.slug === slug);
+  listExercisesForLanguages(languages: readonly string[]): readonly ExercisePackage[] {
+    if (languages.length === 0) return this.exercises;
+    return this.exercises.filter((exercise) =>
+      languages.includes(exercise.language)
+    );
+  }
+
+  selectExercise(slug: string, language?: string): ExercisePackage | undefined {
+    this.currentExercise = this.exercises.find((exercise) =>
+      exercise.slug === slug && (!language || exercise.language === language)
+    );
     return this.currentExercise;
   }
 

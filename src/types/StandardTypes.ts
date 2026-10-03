@@ -51,6 +51,7 @@ export type ChangedFile = {
 
 export type ExercisePackage = { 
   slug: string; 
+  language: string;
   item: Exercise; 
   changedFiles: ChangedFile[] 
 };

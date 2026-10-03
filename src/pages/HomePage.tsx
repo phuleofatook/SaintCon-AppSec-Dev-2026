@@ -1,9 +1,17 @@
 import { ChallengeStub } from '../components/ChallengeStub';
 import type { ExerciseController } from '../services/exercise-controller';
+import { useState } from 'preact/hooks';
 
 export function HomePage({ controller }: { controller: ExerciseController }) {
-  const exercises = controller.listExercises();
   const languages = controller.listLanguages();
+  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
+  const exercises = controller.listExercisesForLanguages(selectedLanguages);
+
+  const toggleLanguage = (language: string) => {
+    setSelectedLanguages((selected) => selected.includes(language)
+      ? selected.filter((selectedLanguage) => selectedLanguage !== language)
+      : [...selected, language]);
+  };
 
   return <>
     <main class="launchpad">
@@ -20,9 +28,25 @@ export function HomePage({ controller }: { controller: ExerciseController }) {
       
 
 
+      <section class="language-filter" aria-labelledby="language-filter-heading">
+        <div>
+          <p class="section-label" id="language-filter-heading">FILTER BY LANGUAGE</p>
+          <p class="filter-hint">Select one or more languages. Exercises matching any selection are shown.</p>
+        </div>
+        <div class="language-options">
+          {languages.map((language) => (
+            <label class="language-option" key={language}>
+              <input type="checkbox" checked={selectedLanguages.includes(language)} onChange={() => toggleLanguage(language)} />
+              <span>{language}</span>
+            </label>
+          ))}
+        </div>
+        {selectedLanguages.length > 0 && <button class="clear-filter" type="button" onClick={() => setSelectedLanguages([])}>Clear filter</button>}
+      </section>
+
       <section class="tutorial-levels" aria-label="Tutorial levels">
         <p class="section-label">TUTORIAL LEVELS</p>
-        {exercises.map((exercise) => exercise.item.difficulty == 'tutorial' ? <ChallengeStub exercise={exercise}/>:"")}
+        {exercises.filter((exercise) => exercise.item.difficulty === 'tutorial').map((exercise) => <ChallengeStub exercise={exercise} key={exercise.slug}/>)}
       </section>
 
 {
@@ -30,7 +54,7 @@ export function HomePage({ controller }: { controller: ExerciseController }) {
 }
       <section class="tutorial-levels" aria-label="Tutorial levels">
         <p class="section-label">Specific Challenges</p>
-        {exercises.map((exercise) => exercise.item.difficulty != 'tutorial' ? <ChallengeStub exercise={exercise}/>:"")}
+        {exercises.filter((exercise) => exercise.item.difficulty !== 'tutorial').map((exercise) => <ChallengeStub exercise={exercise} key={exercise.slug}/>)}
       </section>
 
       <section class="briefing">

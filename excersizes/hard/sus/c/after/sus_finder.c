@@ -19,11 +19,11 @@ Person *getSuspiciousCrew(const char *personId) {
         sql,
         sizeof(sql),
         "SELECT p.person_id, p.first_name, p.last_name, p.sus, r.title "
-        "FROM person p, "
-        "customers c USING (person_id) "
-        "role r USING (person_id) "
+        "FROM person p "
+        "   JOIN customers c USING (person_id) "
+        "   JOIN role r USING (person_id) "
         "WHERE p.person_id = %s "
-        "AND p.sus",
+        "   AND p.sus",
         personId
     );
 

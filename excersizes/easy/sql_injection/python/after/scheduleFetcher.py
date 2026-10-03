@@ -27,7 +27,7 @@ async def getflightSchedule(flightId: str) -> list[Flight]:
     sql = f"""
         SELECT f.flight_id, f.flight_name, f.takeoff, f.landing,
             depart.planet_id AS departureId, depart.planet_name AS departureName,
-            dest.planet_id AS destinationId, dest.planet_name AS destinationName,
+            dest.planet_id AS destinationId, dest.planet_name AS destinationName
         FROM flight f
             JOIN planets depart USING (planet_id)
             JOIN planets dest USING (planet_id)

@@ -13,7 +13,7 @@
     "sourceBranch": "contributor/change",
     "targetBranch": "main"
   },
-  "languages": ["typescript"],
+  "languages": ["typescript", "python","c"],
   "defaultLanguage": "typescript",
  "aiReview": {
     "verdict": "approve",

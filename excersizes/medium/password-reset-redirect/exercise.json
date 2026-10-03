@@ -17,7 +17,7 @@
     "sourceBranch": "orbit-dev/reset-return-path",
     "targetBranch": "main"
   },
-  "languages": ["typescript"],
+  "languages": ["typescript","c","python"],
   "defaultLanguage": "typescript",
   "aiReview": {
     "verdict": "deny",

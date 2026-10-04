@@ -34,9 +34,13 @@ export function App() {
   const route = hash.match(/^#review\/([^/]+)(?:\/([^/]+))?$/);
   const exercise = route ? controllerRef.current.selectExercise(route[1], route[2]) : undefined;
   const startTrack = (language: string, difficulty: string) => {
-    const exercises = controllerRef.current.listExercisesForLanguage(language)
+    const randomized = controllerRef.current.listExercisesForLanguage(language)
       .filter((candidate) => difficulty === 'any' || candidate.item.difficulty === difficulty)
       .sort(() => Math.random() - 0.5);
+    const exercises = [
+      ...randomized.filter((candidate) => candidate.item.difficulty === 'tutorial'),
+      ...randomized.filter((candidate) => candidate.item.difficulty !== 'tutorial'),
+    ];
     if (!exercises.length) return;
     setTrack({ exercises, index: 0 });
     window.location.hash = `review/${exercises[0].slug}/${exercises[0].language}`;

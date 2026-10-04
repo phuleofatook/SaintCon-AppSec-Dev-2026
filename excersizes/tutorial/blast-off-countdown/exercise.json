@@ -17,22 +17,22 @@
     "sourceBranch": "nova-dev/blast-off-countdown",
     "targetBranch": "main"
   },
-  "languages": ["typescript"],
+  "languages": ["typescript", "java", "python"],
   "defaultLanguage": "typescript",
   "aiReview": {
     "verdict": "deny",
-    "summary": "The countdown moves in the wrong direction and can never reach the blast-off condition, so it does not meet the ticket requirements.",
+    "summary": "Walk through a few calls starting from the required initial value and compare the resulting sequence with the ticket.",
     "findings": [
       {
         "severity": "high",
-        "title": "Countdown increments instead of decrementing",
-        "detail": "Each invocation adds one to the remaining seconds. Starting at 10 means the value will increase indefinitely rather than reach 0.",
+        "title": "Check how the countdown value changes",
+        "detail": "Track the value across successive calls and compare its direction with the requested countdown.",
         "file": "src/countdown.ts"
       },
       {
         "severity": "medium",
-        "title": "Blast-off message is unreachable",
-        "detail": "Because the counter starts at 10 and is incremented before the equality check, it cannot equal 0 and will never return the required message.",
+        "title": "Check when the terminal message can appear",
+        "detail": "Determine whether the value can reach the ticket's stopping point and what happens on that call.",
         "file": "src/countdown.ts"
       }
     ]

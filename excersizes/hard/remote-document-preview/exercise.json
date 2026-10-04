@@ -1,0 +1,38 @@
+{
+  "id": "CR-21",
+  "difficulty": "hard",
+  "ticket": {
+    "title": "Preview a remote flight document",
+    "description": "Signed-in staff can enter a document URL and see a text preview. The preview service runs inside the Spaceways network, which can reach internal services that public browsers cannot.",
+    "requirements": [
+      "Accept a document URL from a signed-in staff member.",
+      "Return a text preview of the document.",
+      "Do not expose internal-only services through the preview feature."
+    ]
+  },
+  "pr": {
+    "title": "Add remote document preview",
+    "description": "Fetches the supplied URL on the server and returns the response body as a preview.",
+    "author": "starlight-dev",
+    "sourceBranch": "starlight-dev/remote-preview",
+    "targetBranch": "main"
+  },
+  "languages": ["typescript", "java", "python"],
+  "defaultLanguage": "typescript",
+  "aiReview": {
+    "verdict": "deny",
+    "summary": "Consider what network locations the preview server can reach compared with a staff member's browser, then trace where the supplied URL is fetched.",
+    "findings": [
+      {
+        "severity": "high",
+        "title": "Inspect the preview fetch destination",
+        "detail": "Check which destinations the supplied URL can resolve to and whether the request can be redirected elsewhere.",
+        "file": "src/document-preview.ts"
+      }
+    ]
+  },
+  "proposedAnswer": {
+    "answer": "deny",
+    "reason": "The server's network access gives the supplied URL more reach than the staff member may have directly."
+  }
+}

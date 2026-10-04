@@ -17,11 +17,11 @@
     "sourceBranch": "nova-dev/hello-world",
     "targetBranch": "main"
   },
-  "languages": ["typescript"],
+  "languages": ["typescript", "java", "python"],
   "defaultLanguage": "typescript",
   "aiReview": {
     "verdict": "approve",
-    "summary": "The change replaces the existing greeting with the exact required text and keeps the helper reusable. No dependency or security concerns are introduced.",
+    "summary": "Compare the returned text and the helper's use with the ticket requirements. Check whether the change adds any dependencies.",
     "findings": []
   },
   "proposedAnswer": {

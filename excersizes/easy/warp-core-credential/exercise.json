@@ -1,0 +1,37 @@
+{
+  "id": "CR-50",
+  "difficulty": "easy",
+  "ticket": {
+    "title": "Read neutron-flow polarity from the Turbo Encabulator",
+    "description": "The flight diagnostics service needs to fetch the current polarity of the neutron flow from the Turbo Encabulator at https://encabulator.ship/api/v1/neutron-flow/polarity.",
+    "requirements": [
+      "Fetch neutron-flow polarity from the Turbo Encabulator endpoint.",
+      "Return the polarity reported by the service."
+    ]
+  },
+  "pr": {
+    "title": "Connect diagnostics to the Turbo Encabulator",
+    "description": "Adds the authenticated request needed to retrieve neutron-flow polarity.",
+    "author": "chief-engineer",
+    "sourceBranch": "chief-engineer/warp-core-auth",
+    "targetBranch": "main"
+  },
+  "languages": ["typescript", "java", "python"],
+  "defaultLanguage": "typescript",
+  "aiReview": {
+    "verdict": "deny",
+    "summary": "Trace the request to the neutron-flow polarity endpoint. What credential does the service send, and where does that value come from?",
+    "findings": [
+      {
+        "severity": "high",
+        "title": "The API credential is hard-coded",
+        "detail": "The request sends a reusable API token that is embedded directly in the changed source file. Anyone with repository access can retrieve it, and it may remain exposed in repository history after removal. Load the credential from protected runtime configuration or a secret manager, and rotate the exposed token.",
+        "file": "src/turbo-encabulator.ts"
+      }
+    ]
+  },
+  "proposedAnswer": {
+    "answer": "deny",
+    "reason": "The endpoint integration meets the functional request, but it embeds a reusable credential in source code. Move the token to protected runtime configuration or a secret manager and rotate the exposed credential."
+  }
+}

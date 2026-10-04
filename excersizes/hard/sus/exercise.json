@@ -13,11 +13,11 @@
     "sourceBranch": "contributor/change",
     "targetBranch": "main"
   },
-  "languages": ["typescript", "python","c"],
+  "languages": ["typescript", "python","c", "java"],
   "defaultLanguage": "typescript",
  "aiReview": {
     "verdict": "approve",
-    "summary": "The pull request fixes the inverted suspiciousness condition. The ticket requires returning a suspicious crew member, and the query now filters for p.sus rather than NOT p.sus. The change directly addresses the described logic issue.",
+    "summary": "Compare the ticket's description of who should be returned with the condition used to select a crew member. Also consider what the requested change does not address.",
     "findings": []
   },
   "proposedAnswer": {

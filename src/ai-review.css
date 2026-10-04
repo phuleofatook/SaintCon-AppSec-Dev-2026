@@ -18,35 +18,10 @@
     font-size: 12px !important;
 }
 
-.ai-verdict {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    padding: 10px 12px;
-    border-left: 3px solid;
-}
-
-.ai-verdict span {
-    color: #a5bfce;
-    font: 10px ui-monospace, monospace;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-}
-
-.ai-verdict strong {
-    font-size: 17px;
-}
-
-.ai-verdict-approve {
-    border-color: #7ae29a;
-    background: rgba(47, 116, 75, .2);
-    color: #9df0b8;
-}
-
-.ai-verdict-deny {
-    border-color: #ff724c;
-    background: rgba(157, 62, 44, .2);
-    color: #ffc0ae;
+.ai-focus-label {
+    margin: 18px 0 6px;
+    color: #d8e8f1;
+    font-size: 13px;
 }
 
 .ai-summary {
@@ -59,8 +34,6 @@
 }
 
 .ai-findings li {
-    display: flex;
-    gap: 11px;
     padding: 12px 0;
     border-top: 1px solid rgba(166, 205, 226, .18);
 }
@@ -85,44 +58,17 @@
     margin: 5px 0 0;
 }
 
-.severity {
-    height: fit-content;
-    padding: 3px 5px;
-    border-radius: 2px;
-    font: 9px ui-monospace, monospace;
-    letter-spacing: .07em;
-    text-transform: uppercase;
-}
-
-.severity-high,
-.severity-critical {
-    color: #ffc2ba;
-    background: #73302e;
-}
-
-.severity-medium {
-    color: #ffe2a1;
-    background: #76591e;
-}
-
-.severity-low,
-.severity-info {
-    color: #b9e3ff;
-    background: #24536d;
-}
-
-.ai-empty {
-    margin: 14px 0 0;
-}
-
 html[data-theme="light"] .ai-review {
     border-color: #c5d3dc;
     background: rgba(239, 247, 250, .72);
 }
 
-html[data-theme="light"] .ai-disclaimer,
-html[data-theme="light"] .ai-verdict span {
+html[data-theme="light"] .ai-disclaimer {
     color: #526c7d;
+}
+
+html[data-theme="light"] .ai-focus-label {
+    color: #20394b;
 }
 
 html[data-theme="light"] .ai-findings li {
@@ -135,31 +81,4 @@ html[data-theme="light"] .ai-findings strong {
 
 html[data-theme="light"] .ai-findings code {
     color: #075b9a;
-}
-
-html[data-theme="light"] .ai-verdict-approve {
-    color: #21623a;
-    background: #e4f4e9;
-}
-
-html[data-theme="light"] .ai-verdict-deny {
-    color: #9a3b27;
-    background: #fff0eb;
-}
-
-html[data-theme="light"] .severity-high,
-html[data-theme="light"] .severity-critical {
-    color: #7e2028;
-    background: #f5dadd;
-}
-
-html[data-theme="light"] .severity-medium {
-    color: #684b00;
-    background: #f5eccd;
-}
-
-html[data-theme="light"] .severity-low,
-html[data-theme="light"] .severity-info {
-    color: #174a68;
-    background: #dcecf5;
 }

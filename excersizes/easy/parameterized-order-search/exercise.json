@@ -1,0 +1,31 @@
+{
+  "id": "CR-10",
+  "difficulty": "easy",
+  "ticket": {
+    "title": "Search orders by passenger name",
+    "description": "Add a search operation for staff to find orders by a passenger-name fragment.",
+    "requirements": [
+      "Accept a name fragment as search input.",
+      "Return matching orders.",
+      "Treat the search input as data, not as part of the SQL statement."
+    ]
+  },
+  "pr": {
+    "title": "Safely search orders by name",
+    "description": "Updates the order repository to pass the search term separately from the SQL statement.",
+    "author": "nova-dev",
+    "sourceBranch": "nova-dev/safe-order-search",
+    "targetBranch": "main"
+  },
+  "languages": ["typescript", "java", "python"],
+  "defaultLanguage": "typescript",
+  "aiReview": {
+    "verdict": "approve",
+    "summary": "Trace how the passenger-name fragment reaches the database query. Is it kept separate from the query text?",
+    "findings": []
+  },
+  "proposedAnswer": {
+    "answer": "approve",
+    "reason": "The query is parameterized, so the search term remains data rather than executable SQL."
+  }
+}

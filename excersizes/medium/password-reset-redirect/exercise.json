@@ -3,38 +3,41 @@
   "difficulty": "medium",
   "ticket": {
     "title": "Preserve the return destination after a password reset",
-    "description": "Passengers who begin a password reset from a protected Spaceways page should return to that page after they set a new password.",
+    "description": "A passenger can start a password reset while viewing a protected Spaceways page. The reset request carries that page as `returnTo`, and the passenger should go back there after choosing a new password. Review how that request value travels through the changed files and decide whether the emailed link keeps it inside Spaceways.",
     "requirements": [
-      "Accept an optional returnTo value from the reset request.",
-      "Include the return destination in the password-reset link.",
-      "Only allow destinations within the Spaceways application."
+      "Accept an optional returnTo value from the reset request and preserve it in the password-reset link.",
+      "A reset email must never send the passenger to a destination outside the Spaceways application."
     ]
   },
   "pr": {
     "title": "Keep passenger return path in password reset emails",
-    "description": "Adds return-path support to reset links so passengers can resume their journey after resetting a password.",
+    "description": "Passes the requested return path from the password-reset handler into the link builder so passengers can resume their journey after resetting a password.",
     "author": "orbit-dev",
     "sourceBranch": "orbit-dev/reset-return-path",
     "targetBranch": "main"
   },
-  "languages": ["typescript","c","python"],
+  "languages": ["typescript","c","python","java"],
   "defaultLanguage": "typescript",
   "aiReview": {
     "verdict": "deny",
-    "summary": "The new returnTo parameter is copied into the reset link without validation. An attacker can use it to create a legitimate-looking Spaceways reset email that sends a passenger to an external site after the reset.",
+    "summary": "Follow `returnTo` through both changed files, then compare the resulting link behavior with the ticket's destination requirement.",
     "findings": [
       {
         "severity": "high",
-        "title": "Unvalidated return destination enables an open redirect",
-        "detail": "buildResetLink accepts an arbitrary returnTo value and places it in the reset URL. Restrict it to a relative, application-owned path before including it in the link.",
+        "title": "Inspect how the reset link handles its destination",
+        "detail": "Check whether the link builder distinguishes an application path from a destination outside Spaceways.",
         "file": "src/reset-link.ts"
       },
       {
         "severity": "medium",
-        "title": "Request input reaches the reset email unchanged",
-        "detail": "The handler forwards the query parameter directly to the link builder, so a URL such as https://attacker.example can be embedded in every requested reset link.",
+        "title": "Trace the request value across the changed files",
+        "detail": "Identify where `returnTo` originates and how the receiving function uses it to construct the email link.",
         "file": "src/request-password-reset.ts"
       }
     ]
+  },
+  "proposedAnswer": {
+    "answer": "deny",
+    "reason": "The handler passes request-controlled returnTo to the link builder, and the builder embeds it in the trusted reset email without validating the destination."
   }
 }

@@ -1,0 +1,38 @@
+{
+  "id": "CR-18",
+  "difficulty": "medium",
+  "ticket": {
+    "title": "Export your flight history",
+    "description": "Passengers should be able to download a CSV of their own completed flights.",
+    "requirements": [
+      "Require the caller to be signed in.",
+      "Return only the flight history belonging to the signed-in passenger.",
+      "Return the selected history as a CSV download."
+    ]
+  },
+  "pr": {
+    "title": "Add flight history CSV export",
+    "description": "Adds an endpoint that lets a passenger download a flight history by its ID.",
+    "author": "nova-dev",
+    "sourceBranch": "nova-dev/flight-history-export",
+    "targetBranch": "main"
+  },
+  "languages": ["typescript", "java", "python"],
+  "defaultLanguage": "typescript",
+  "aiReview": {
+    "verdict": "deny",
+    "summary": "The ticket asks for the signed-in passenger's own history. Trace how the request identifies a history and what the endpoint verifies before returning it.",
+    "findings": [
+      {
+        "severity": "high",
+        "title": "Inspect the history lookup and access checks",
+        "detail": "Check whether the requested history is tied to the current passenger, beyond verifying that someone is signed in.",
+        "file": "src/flight-history-export.ts"
+      }
+    ]
+  },
+  "proposedAnswer": {
+    "answer": "deny",
+    "reason": "Authentication does not prove that the requested flight history belongs to the signed-in passenger."
+  }
+}

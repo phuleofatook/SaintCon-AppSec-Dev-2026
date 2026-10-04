@@ -13,11 +13,11 @@
     "sourceBranch": "contributor/change",
     "targetBranch": "main"
   },
-  "languages": ["typescript","c","python"],
+  "languages": ["typescript","c","python","java"],
   "defaultLanguage": "typescript",
  "aiReview": {
     "verdict": "",
-    "summary": "",
+    "summary": "Trace the flight ID from input to the database call. Check whether it stays a value or changes how the query is interpreted.",
     "findings": []
   },
   "proposedAnswer": {

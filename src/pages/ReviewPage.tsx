@@ -1,47 +1,30 @@
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { AiReview } from '../components/AiReview';
 import { DiffView, type DiffOutputFormat } from '../components/DiffView';
 import { Choice, type ExercisePackage } from '../types/StandardTypes'
 
-function score(choice: Choice, exercise: ExercisePackage) {
-
-  if (!exercise.item.proposedAnswer){
-    console.warn(`This excersize does not have a proposed answer`);
-    return;
-  }
-
-  console.log(`The user chose ${choice} and the recommended solution was ${exercise.item.proposedAnswer.answer}`);
-  if (choice !== exercise.item.proposedAnswer.answer) {
-
-    //TODO: make this a nice modal rather than a plain alert. OR make an in page feedback
-    alert(`We recommend ${prettyPrintChoice(exercise.item.proposedAnswer.answer)} for this reason: ${exercise.item.proposedAnswer.reason}`);
-  }
-
-  function prettyPrintChoice(answer:any) {
-    switch (answer) {
-      case Choice.ACCEPT: return 'Approve';
-      case Choice.REJECT: return 'Deny';
-      case Choice.MAYBE: return 'Maybe';
-    }
-
-    console.warn(`Unable to pretty print ${answer}`);
-    return answer;
-  }
+function prettyPrintChoice(answer: Choice) {
+  return answer === Choice.ACCEPT ? 'Approve' : 'Deny';
 }
 
 
-export function ReviewPage({ exercise }: { exercise: ExercisePackage }) {
+export function ReviewPage({ exercise, nextExercise, progress, completed = false }: { exercise: ExercisePackage; nextExercise?: ExercisePackage; progress?: { current: number; total: number }; completed?: boolean }) {
   const [format, setFormat] = useState<DiffOutputFormat>('side-by-side');
   const [contextSize, setContextSize] = useState<number>(10);
   const [highlight, setHighlight] = useState<boolean>(true);
+  const [submittedChoice, setSubmittedChoice] = useState<Choice | null>(null);
   const { item, changedFiles } = exercise;
+  const recommendation = item.proposedAnswer;
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [exercise.slug, exercise.language]);
 
   return <>
     <main class="review-page">
-      <a class="back" href="#home">← Challenge queue</a>
+      <a class="back" href="#home">Back to main menu</a>
       <section class="review-heading">
         <div>
-          <p class="eyebrow">EXERCISE {item.id} · {item.difficulty.toUpperCase()}</p>
+          <p class="eyebrow">{progress ? `TRACK EXERCISE ${progress.current}/${progress.total} · ` : 'EXERCISE '}{item.id} · {item.difficulty.toUpperCase()}</p>
           <h1>{item.pr.title}</h1>
           <p class="byline">{item.pr.author} proposes merging <code>{item.pr.sourceBranch}</code> into <code>{item.pr.targetBranch}</code>
           </p>
@@ -80,17 +63,38 @@ export function ReviewPage({ exercise }: { exercise: ExercisePackage }) {
           <AiReview review={item.aiReview} />
           <div class="decision">
             <div>
-              <strong>Ready to make the call?</strong>
-              <span>Approve changes that should ship. Deny changes that should not.</span>
+              <strong>What’s your recommendation?</strong>
+              <span>Choose the action you would take, then compare it with the exercise guidance.</span>
             </div>
             <div class="decision-buttons">
-              <button class="deny" type="button" onClick={() => score(Choice.REJECT, exercise)}>Deny</button>
-              {item.difficulty === 'hard' ? <button class="maybe" type="button" onClick={() => score(Choice.MAYBE, exercise)}>Maybe</button> : ''}
-              <button class="approve" type="button" onClick={() => score(Choice.ACCEPT, exercise)}>Approve</button>
+              <button class="deny" type="button" onClick={() => setSubmittedChoice(Choice.REJECT)}>Deny</button>
+              <button class="approve" type="button" onClick={() => setSubmittedChoice(Choice.ACCEPT)}>Approve</button>
             </div>
           </div>
         </section>
       </section>
     </main>
+    {submittedChoice !== null && <div class="comparison-backdrop" onClick={() => setSubmittedChoice(null)}>
+      <section class="comparison-dialog" role="dialog" aria-modal="true" aria-labelledby="comparison-title" onClick={(event) => event.stopPropagation()}>
+        <button class="comparison-close" type="button" aria-label="Close comparison" onClick={() => setSubmittedChoice(null)}>×</button>
+        <p class="eyebrow">REVIEW COMPARISON</p>
+        <h2 id="comparison-title">Your call: {prettyPrintChoice(submittedChoice)}</h2>
+        {recommendation ? <>
+          <div class="comparison-recommendation">
+            <span>Exercise recommendation</span>
+            <strong>{prettyPrintChoice(recommendation.answer)}</strong>
+          </div>
+          <h3>Why we recommend this</h3>
+          <p>{recommendation.reason}</p>
+        </> : <p>There is no exercise recommendation available for this change.</p>}
+        <p class="comparison-note">Use the reasoning to compare approaches. This practice is for learning, not grading.</p>
+        <div class="comparison-actions">
+          <button class="comparison-done secondary" type="button" onClick={() => { setSubmittedChoice(null); window.location.hash = 'home'; }}>Return to main menu</button>
+          {nextExercise && <button class="comparison-done" type="button" onClick={() => { window.location.hash = `review/${nextExercise.slug}/${nextExercise.language}`; }}>Do next exercise <span aria-hidden="true">→</span></button>}
+          {completed && <p class="track-complete" role="status">Track complete — you reviewed every exercise in this set.</p>}
+          <button class="review-again" type="button" onClick={() => setSubmittedChoice(null)}>Back to review</button>
+        </div>
+      </section>
+    </div>}
   </>;
 }

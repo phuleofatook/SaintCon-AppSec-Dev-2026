@@ -1,23 +1,25 @@
 import { CachedAiReview } from "../types/StandardTypes";
 
 export function AiReview({ review }: { review: CachedAiReview }) {
-  const decision = review.verdict === 'approve' ? 'Approve' : 'Deny';
   return <details class="context-panel ai-review">
     <summary>
       <span>
-        <span class="section-label">OFFLINE AI REVIEW</span>
-        <strong>Review assistant</strong>
+        <span class="section-label">OPTIONAL REVIEW AID</span>
+        <strong>Get a hint</strong>
       </span>
-      <span class="panel-toggle" aria-hidden="true">Show review</span>
+      <span class="panel-toggle" aria-hidden="true">Show hint</span>
     </summary>
     <div class="panel-content">
-      <p class="ai-disclaimer">Precomputed for this exercise. It does not send your code or use tokens.</p>
-      <div class={`ai-verdict ai-verdict-${review.verdict}`}>
-        <span>Suggested decision</span>
-        <strong>{decision}</strong>
-      </div>
+      <p class="ai-disclaimer">
+        A prewritten hint, such as those you can get from an AI assistant, can help focus your review. 
+        Treat it as a starting point: check the diff and ticket yourself. 
+      </p>
+      <h3 class="ai-focus-label">A place to focus</h3>
       <p class="ai-summary">{review.summary}</p>
-      {review.findings.length ? <ul class="ai-findings">{review.findings.map((finding) => <li key={`${finding.file ?? ''}-${finding.title}`}><span class={`severity severity-${finding.severity}`}>{finding.severity}</span><div><strong>{finding.title}</strong>{finding.file && <code>{finding.file}</code>}<p>{finding.detail}</p></div></li>)}</ul> : <p class="ai-empty">No issues found in this change.</p>}
+      {review.findings.length > 0 && <>
+        <h3 class="ai-focus-label">Things to inspect</h3>
+        <ul class="ai-findings">{review.findings.map((finding) => <li key={`${finding.file ?? ''}-${finding.title}`}><div><strong>{finding.title}</strong>{finding.file && <code>{finding.file}</code>}<p>{finding.detail}</p></div></li>)}</ul>
+      </>}
     </div>
   </details>;
 }

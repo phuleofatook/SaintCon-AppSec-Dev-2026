@@ -1,0 +1,37 @@
+{
+  "id": "CR-20",
+  "difficulty": "easy",
+  "ticket": {
+    "title": "Show a passenger profile message",
+    "description": "Let passengers add a short message to their profile so it can be seen by other signed-in passengers.",
+    "requirements": [
+      "Display the profile message as text.",
+      "Keep the existing profile page markup."
+    ]
+  },
+  "pr": {
+    "title": "Display profile messages",
+    "description": "Adds the passenger's profile message to the profile page.",
+    "author": "orbit-dev",
+    "sourceBranch": "orbit-dev/profile-message",
+    "targetBranch": "main"
+  },
+  "languages": ["typescript", "java", "python"],
+  "defaultLanguage": "typescript",
+  "aiReview": {
+    "verdict": "deny",
+    "summary": "Follow a profile message from storage to the page. Does the rendering path preserve the ticket's requirement to display it as text?",
+    "findings": [
+      {
+        "severity": "high",
+        "title": "Inspect the profile message rendering path",
+        "detail": "Check how the changed code inserts the message into the page, and whether the browser treats its contents as text or markup.",
+        "file": "src/profile-page.ts"
+      }
+    ]
+  },
+  "proposedAnswer": {
+    "answer": "deny",
+    "reason": "The ticket asks for text, but this change inserts passenger-controlled content as HTML."
+  }
+}

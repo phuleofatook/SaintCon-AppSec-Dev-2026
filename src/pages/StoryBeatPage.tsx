@@ -12,7 +12,7 @@ export function StoryBeatPage({ page, onBack, onContinue, onFinish, isFirst = fa
     <h1>{content.title}</h1>
     {content.image && <div class="story-art-frame">
       <img class="story-art" src={content.image} alt={content.imageAlt ?? ''} />
-      {content.imageAction && <button class={`story-art-action story-art-action--${content.imageAction.placement}`} type="button" aria-label={content.imageAction.label} onClick={onContinue}>
+      {content.imageAction && <button class={`story-art-action story-art-action--${content.imageAction.placement}`} type="button" aria-label={content.imageAction.label} onClick={isLast ? onFinish : onContinue}>
         <span class="visually-hidden">{content.imageAction.label}</span>
       </button>}
     </div>}

@@ -1,8 +1,8 @@
 import type { ComponentType } from 'preact';
 import orientationArtUrl from '../assets/story-cutscene-1.png';
-import queueArtUrl from '../assets/story-cutscene-2.png';
-import aiReviewerArtUrl from '../assets/story-cutscene-3.png';
-import judgmentArtUrl from '../assets/story-cutscene-4.png';
+import aiReviewerArtUrl from '../assets/story-cutscene-2.png';
+import throughputArtUrl from '../assets/story-cutscene-3.png';
+import debriefArtUrl from '../assets/story-cutscene-6.png';
 
 /** Story copy and optional artwork references live here, separately from exercise data. */
 export type StoryPageContent = {
@@ -13,7 +13,7 @@ export type StoryPageContent = {
   imageAlt?: string;
   imageAction?: {
     label: string;
-    placement: 'tutorial' | 'queue' | 'ai-review' | 'review-decision';
+    placement: 'tutorial' | 'queue' | 'ai-review' | 'finish';
   };
 };
 
@@ -33,7 +33,7 @@ export const storyPages: Record<string, StoryPageDefinition> = {
     title: 'Welcome aboard, Reviewer.',
     image: orientationArtUrl,
     imageAlt: 'A Spaceways onboarding comic introduces the reviewer to Ape Input and the review tutorial.',
-    imageAction: { label: 'Begin tutorial', placement: 'tutorial' },
+    imageAction: { label: 'Begin shift and start the tutorial', placement: 'tutorial' },
     paragraphs: [
       'Your predecessor is no longer with the company. Management assures us this was unrelated to the airlock.',
       'Your assignment is simple: review proposed code changes and decide whether they should ship.',
@@ -44,9 +44,9 @@ export const storyPages: Record<string, StoryPageDefinition> = {
   'first-shift': { type: 'briefing', content: {
     eyebrow: 'YOUR FIRST SHIFT · FLIGHT CONTROL',
     title: 'The queue is getting more interesting.',
-    image: queueArtUrl,
-    imageAlt: 'A comic shows a growing stack of review requests overwhelming the reviewer.',
-    imageAction: { label: 'Review the next queue', placement: 'queue' },
+    image: throughputArtUrl,
+    imageAlt: 'A comic shows development throughput and the review queue increasing by 10,000 percent.',
+    imageAction: { label: 'Start the next review', placement: 'queue' },
     paragraphs: [
       'The tutorials are complete. Engineering has sent over your first batch of changes.',
       'Management assures us that every change has already undergone extensive automated analysis. Which means there is absolutely nothing to worry about. Probably.',
@@ -75,9 +75,6 @@ export const storyPages: Record<string, StoryPageDefinition> = {
   'review-strategy': { type: 'briefing', content: {
     eyebrow: 'A STRATEGIC QUESTION · MANAGEMENT OBSERVING',
     title: 'How should review work now?',
-    image: judgmentArtUrl,
-    imageAlt: 'A comic follows a reviewer through an approved change and emphasizes that code review requires judgment, not just trust in AI.',
-    imageAction: { label: 'Continue to the next review', placement: 'review-decision' },
     paragraphs: [
       'Engineering is producing more code than one human can reasonably inspect line by line. Automated review can inspect the queue and help direct attention.',
       'The useful question is how people use that analysis to investigate risk and decide what can ship. Fortunately, management does not make security decisions.',
@@ -110,6 +107,9 @@ export const storyPages: Record<string, StoryPageDefinition> = {
   debrief: { type: 'briefing', content: {
     eyebrow: 'SHIFT COMPLETE · REVIEW DEPARTMENT',
     title: 'Somebody still owns the decision.',
+    image: debriefArtUrl,
+    imageAlt: 'A comic concludes that automated tools help, but somebody still has to own the decision of what ships.',
+    imageAction: { label: 'Finish shift and return to the mission menu', placement: 'finish' },
     paragraphs: [
       'You were not asked to write the code, inspect every line manually, or find every possible defect. You were asked whether the change was safe enough to ship.',
       'Modern tools can generate and analyze enormous amounts of code. They can summarize changes, identify unusual patterns, and point people toward areas worth investigating.',

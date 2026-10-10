@@ -68,7 +68,6 @@ button {
 .title-page {
     min-height: 100vh;
     display: grid;
-    grid-template-rows: 1fr auto;
     justify-items: center;
     background: #080b10;
 }
@@ -82,13 +81,43 @@ button {
     padding: 16px 16px 0;
 }
 
+.title-page-image {
+    position: relative;
+    width: min(100%, calc((100vh - 32px) * 1.5));
+}
+
 .title-page-art img {
     display: block;
-    width: auto;
-    max-width: min(640px, 100%);
-    max-height: calc(100vh - 168px);
-    object-fit: contain;
+    width: 100%;
     box-shadow: 0 24px 70px rgba(0, 0, 0, .55);
+}
+
+.title-art-action {
+    position: absolute;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.title-art-action:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 7px rgba(115, 229, 241, .75);
+}
+
+.title-art-action--story {
+    left: 60.2%;
+    top: 53.5%;
+    width: 36.3%;
+    height: 12.8%;
+}
+
+.title-art-action--free-for-all {
+    left: 60.5%;
+    top: 67.1%;
+    width: 35.8%;
+    height: 10.9%;
 }
 
 .mode-selector {
@@ -171,8 +200,8 @@ button {
 
 .story-art-frame {
     position: relative;
-    width: min(960px, 100%, calc(56vh * 1.7777778));
-    aspect-ratio: 16 / 9;
+    width: min(960px, 100%, calc(56vh * 1.5));
+    aspect-ratio: 3 / 2;
     margin: 8px 0 24px;
 }
 
@@ -200,31 +229,31 @@ button {
 }
 
 .story-art-action--tutorial {
-    right: 2.4%;
-    bottom: 8.5%;
-    width: 30.5%;
-    height: 14.5%;
+    left: 75.6%;
+    top: 87.7%;
+    width: 22.9%;
+    height: 9.4%;
 }
 
 .story-art-action--queue {
-    right: 3.2%;
-    bottom: 8.6%;
-    width: 23%;
-    height: 11.2%;
+    left: 79.5%;
+    top: 87.8%;
+    width: 19.1%;
+    height: 8.9%;
 }
 
 .story-art-action--ai-review {
-    left: 72.5%;
-    bottom: 13.5%;
-    width: 24%;
-    height: 10%;
+    left: 75.8%;
+    top: 87.4%;
+    width: 22.8%;
+    height: 9.2%;
 }
 
-.story-art-action--review-decision {
-    left: 45.6%;
-    bottom: 11.8%;
-    width: 14.4%;
-    height: 7.2%;
+.story-art-action--finish {
+    left: 78.1%;
+    top: 87.7%;
+    width: 20.3%;
+    height: 9.1%;
 }
 
 .visually-hidden {
@@ -1452,10 +1481,6 @@ html[data-theme="light"] .pull-request .d2h-code-side-line del [class*=" hljs-"]
     .review-page,
     .story-briefing {
         width: min(100% - 32px, 600px);
-    }
-
-    .title-page-art img {
-        max-height: calc(100vh - 210px);
     }
 
     .mode-actions {

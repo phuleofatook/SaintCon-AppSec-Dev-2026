@@ -9,15 +9,16 @@
 
 
 ## UI
-- [ ] Difficulty selector
+- [X] Difficulty selector
 - [ ] Styling consistent with conference?
 - [ ] End of run scoring
-- [ ] Reset
+- [X] Reset
 
-## Excersizes
-- [ ] Implement some
+## Exercises
+- [X] Implement some
 - [ ] Implement more
 - [ ] Standardize excerize identifiers
+- [ ] Focus on a few core ones
 
 ## Stretch
-Excersizes in a full project, not out of context
+Exercises in a full project, not out of context

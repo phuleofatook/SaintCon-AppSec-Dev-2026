@@ -4,15 +4,14 @@ export function AiReview({ review }: { review: CachedAiReview }) {
   return <details class="context-panel ai-review">
     <summary>
       <span>
-        <span class="section-label">OPTIONAL REVIEW AID</span>
-        <strong>Get a hint</strong>
+        <span class="section-label">APE INPUT™ CODE REVIEW</span>
+        <strong>Run automated review</strong>
       </span>
-      <span class="panel-toggle" aria-hidden="true">Show hint</span>
+      <span class="panel-toggle" aria-hidden="true">Show review</span>
     </summary>
     <div class="panel-content">
       <p class="ai-disclaimer">
-        A prewritten hint, such as those you can get from an AI assistant, can help focus your review. 
-        Treat it as a starting point: check the diff and ticket yourself. 
+        Automated analysis can help focus your review. Treat it as a starting point: check the diff and ticket yourself, then make the shipping decision.
       </p>
       <h3 class="ai-focus-label">A place to focus</h3>
       <p class="ai-summary">{review.summary}</p>

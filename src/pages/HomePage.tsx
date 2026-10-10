@@ -3,23 +3,25 @@ import type { ExerciseController } from '../services/exercise-controller';
 import { ChallengeStub } from '../components/ChallengeStub';
 
 const difficulties = [
-  { value: 'any', label: 'Any level' },
   { value: 'tutorial', label: 'Tutorial' },
   { value: 'easy', label: 'Easy' },
   { value: 'medium', label: 'Medium' },
   { value: 'hard', label: 'Hard' },
 ];
 
-export function HomePage({ controller, onStartTrack }: { controller: ExerciseController; onStartTrack: (language: string, difficulty: string) => void }) {
+export function HomePage({ controller, onStartTrack }: { controller: ExerciseController; onStartTrack: (language: string, difficulties: readonly string[]) => void }) {
   const languages = controller.listLanguages();
   const [language, setLanguage] = useState(languages.includes('typescript') ? 'typescript' : languages[0] ?? '');
-  const [difficulty, setDifficulty] = useState('tutorial');
-  const [specificMode, setSpecificMode] = useState(false);
+  const [selectedDifficulties, setSelectedDifficulties] = useState<string[]>([]);
+  const toggleDifficulty = (difficulty: string) => {
+    setSelectedDifficulties((current) => current.includes(difficulty)
+      ? current.filter((value) => value !== difficulty)
+      : [...current, difficulty]);
+  };
   const matching = controller.listExercisesForLanguage(language).filter((exercise) =>
-    difficulty === 'any' || exercise.item.difficulty === difficulty
+    selectedDifficulties.length === 0 || selectedDifficulties.includes(exercise.item.difficulty)
   );
   const exercisesByDifficulty = difficulties
-    .filter(({ value }) => value !== 'any')
     .map(({ value, label }) => ({
       value,
       label,
@@ -28,16 +30,18 @@ export function HomePage({ controller, onStartTrack }: { controller: ExerciseCon
     .filter(({ exercises }) => exercises.length > 0);
 
   return <main class="launchpad">
+    <a class="back" href="#home">Back to title</a>
+    <p class="eyebrow">FREE FOR ALL</p>
     <h1>Clear your change for <em>launch.</em></h1>
     <p class="intro">Review a proposed pull request, consider the mission brief, and make the call. Will it fly?</p>
 
-    <section class="practice-setup" aria-labelledby="practice-heading">
-      <div>
-        <p class="section-label">START A PRACTICE SET</p>
-        <h2 id="practice-heading">Choose your flight plan</h2>
-        <p class="filter-hint">Pick a language and level. We’ll deal you an exercise to review.</p>
+    <section class="exercise-filters" aria-labelledby="filter-heading">
+      <div class="filter-intro">
+        <p class="section-label">FILTER EXERCISES</p>
+        <h2 id="filter-heading">Set your review parameters</h2>
+        <p class="filter-hint">These filters apply to both a practice track and the individual exercise list below.</p>
       </div>
-      <div class="setup-fields">
+      <div class="filter-controls">
         <label class="setup-field">LANGUAGE
           <select value={language} onChange={(event) => setLanguage((event.currentTarget as HTMLSelectElement).value)}>
             {languages.map((item) => {
@@ -46,28 +50,48 @@ export function HomePage({ controller, onStartTrack }: { controller: ExerciseCon
             })}
           </select>
         </label>
-        <label class="setup-field">DIFFICULTY
-          <select value={difficulty} onChange={(event) => setDifficulty((event.currentTarget as HTMLSelectElement).value)}>
-            {difficulties.map((item) => <option value={item.value} key={item.value}>{item.label}</option>)}
-          </select>
-        </label>
+        <fieldset class="difficulty-filter">
+          <legend>DIFFICULTY <span>Optional — clear means any level</span></legend>
+          <div class="difficulty-options">
+            {difficulties.map((item) => <label class="difficulty-option" key={item.value}>
+              <input type="checkbox" checked={selectedDifficulties.includes(item.value)} onChange={() => toggleDifficulty(item.value)} />
+              <span>{item.label}</span>
+            </label>)}
+          </div>
+        </fieldset>
       </div>
-      <button class="primary-action" type="button" disabled={!matching.length} onClick={() => onStartTrack(language, difficulty)}>Start exercise track <span>→</span></button>
-      <p class="set-count">{matching.length} {matching.length === 1 ? 'exercise' : 'exercises'} in this set</p>
     </section>
 
-    <section class="specific-picker">
-      <button class="specific-toggle" type="button" aria-expanded={specificMode} onClick={() => setSpecificMode(!specificMode)}>
-        {specificMode ? 'Hide' : 'Choose'} a specific exercise <span>{specificMode ? '−' : '+'}</span>
-      </button>
-      {specificMode && <div class="specific-list">
-        {exercisesByDifficulty.map(({ value, label, exercises }) => <section class="tutorial-levels" aria-label={`${label} exercises`} key={value}>
-          <p class="section-label">{label.toUpperCase()}</p>
-          {exercises.map((exercise) => <ChallengeStub exercise={exercise} key={`${exercise.slug}-${exercise.language}`} />)}
-        </section>)}
-        {matching.length === 0 && <p class="filter-hint">No exercises match this language and difficulty yet.</p>}
-      </div>}
-    </section>
+    <div class="exercise-paths">
+      <section class="practice-setup" aria-labelledby="practice-heading">
+        <div>
+          <p class="section-label">PRACTICE SET</p>
+          <h2 id="practice-heading">Take a randomized track</h2>
+          <p class="filter-hint">We’ll shuffle the matching exercises into a review queue.</p>
+        </div>
+        <div class="practice-action">
+          <button class="primary-action" type="button" disabled={!matching.length} onClick={() => onStartTrack(language, selectedDifficulties)}>Start exercise track <span>→</span></button>
+          <p class="set-count">{matching.length} {matching.length === 1 ? 'exercise' : 'exercises'} available</p>
+        </div>
+      </section>
+
+      <section class="specific-picker" aria-labelledby="specific-heading">
+        <div class="specific-heading">
+          <div>
+            <p class="section-label">SPECIFIC EXERCISE</p>
+            <h2 id="specific-heading">Choose an exercise yourself</h2>
+          </div>
+          <p class="set-count">{matching.length} matching</p>
+        </div>
+        <div class="specific-list">
+          {exercisesByDifficulty.map(({ value, label, exercises }) => <section class="tutorial-levels" aria-label={`${label} exercises`} key={value}>
+            <p class="section-label">{label.toUpperCase()}</p>
+            {exercises.map((exercise) => <ChallengeStub exercise={exercise} key={`${exercise.slug}-${exercise.language}`} />)}
+          </section>)}
+          {matching.length === 0 && <p class="filter-hint">No exercises match this language and difficulty yet.</p>}
+        </div>
+      </section>
+    </div>
 
     <section class="briefing">
       <article><b>01</b><h2>Read the ticket</h2><p>Understand the requested change and its constraints.</p></article>

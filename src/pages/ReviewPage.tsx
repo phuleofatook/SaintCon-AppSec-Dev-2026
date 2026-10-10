@@ -8,7 +8,7 @@ function prettyPrintChoice(answer: Choice) {
 }
 
 
-export function ReviewPage({ exercise, nextExercise, progress, completed = false }: { exercise: ExercisePackage; nextExercise?: ExercisePackage; progress?: { current: number; total: number }; completed?: boolean }) {
+export function ReviewPage({ exercise, previousHref, nextExercise, nextHref, progress, completed = false, menuHash = 'home', automatedReviewEnabled = true }: { exercise: ExercisePackage; previousHref?: string; nextExercise?: ExercisePackage; nextHref?: string; progress?: { current: number; total: number }; completed?: boolean; menuHash?: string; automatedReviewEnabled?: boolean }) {
   const [format, setFormat] = useState<DiffOutputFormat>('side-by-side');
   const [contextSize, setContextSize] = useState<number>(10);
   const [highlight, setHighlight] = useState<boolean>(true);
@@ -21,7 +21,11 @@ export function ReviewPage({ exercise, nextExercise, progress, completed = false
 
   return <>
     <main class="review-page">
-      <a class="back" href="#home">Back to main menu</a>
+      <div class="review-navigation">
+        <a class="back" href={`#${menuHash}`}>Back to main menu</a>
+        {previousHref && <a class="track-page-link" href={`#${previousHref}`}>&larr; Previous page</a>}
+        {nextHref && <a class="track-page-link" href={`#${nextHref}`}>Next page &rarr;</a>}
+      </div>
       <section class="review-heading">
         <div>
           <p class="eyebrow">{progress ? `TRACK EXERCISE ${progress.current}/${progress.total} · ` : 'EXERCISE '}{item.id} · {item.difficulty.toUpperCase()}</p>
@@ -60,7 +64,7 @@ export function ReviewPage({ exercise, nextExercise, progress, completed = false
             contextSize={contextSize} onContextSizeChange={setContextSize}
             highlight={highlight} onHighlightChange={setHighlight}
           />
-          <AiReview review={item.aiReview} />
+          {automatedReviewEnabled && <AiReview review={item.aiReview} />}
           <div class="decision">
             <div>
               <strong>What’s your recommendation?</strong>
@@ -89,8 +93,11 @@ export function ReviewPage({ exercise, nextExercise, progress, completed = false
         </> : <p>There is no exercise recommendation available for this change.</p>}
         <p class="comparison-note">Use the reasoning to compare approaches. This practice is for learning, not grading.</p>
         <div class="comparison-actions">
-          <button class="comparison-done secondary" type="button" onClick={() => { setSubmittedChoice(null); window.location.hash = 'home'; }}>Return to main menu</button>
-          {nextExercise && <button class="comparison-done" type="button" onClick={() => { window.location.hash = `review/${nextExercise.slug}/${nextExercise.language}`; }}>Do next exercise <span aria-hidden="true">→</span></button>}
+          <button class="comparison-done secondary" type="button" onClick={() => {
+            setSubmittedChoice(null);
+            window.location.hash = previousHref ?? menuHash;
+          }}>{previousHref ? 'Return to previous story page' : 'Return to main menu'}</button>
+          {nextHref && <button class="comparison-done" type="button" onClick={() => { window.location.hash = nextHref; }}>{nextExercise ? 'Do next exercise' : 'Continue story'} <span aria-hidden="true">→</span></button>}
           {completed && <p class="track-complete" role="status">Track complete — you reviewed every exercise in this set.</p>}
           <button class="review-again" type="button" onClick={() => setSubmittedChoice(null)}>Back to review</button>
         </div>

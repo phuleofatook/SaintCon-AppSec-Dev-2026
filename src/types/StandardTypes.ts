@@ -3,6 +3,8 @@
 export type Exercise = {
   id: string;
   difficulty: string;
+  /** Optional placement in Story Mode. */
+  storyGroup?: string;
   ticket: { 
     title: string; 
     description: string; 

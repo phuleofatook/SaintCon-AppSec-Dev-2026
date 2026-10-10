@@ -1,7 +1,7 @@
 import type { ExercisePackage, Exercise } from '../types/StandardTypes';
 import { Choice } from '../types/StandardTypes';
 
-const excersizesLocation = '../../excersizes';
+const exercisesLocation = '../../excersizes';
 
 //Unfortunatly these require string literals so can not use a parameterized version to keep a single source of truth on the path prefix
 const exerciseModules = import.meta.glob<Exercise>('../../excersizes/*/*/exercise.json', { eager: true, import: 'default' });
@@ -49,7 +49,7 @@ function discoverExercises(): ExercisePackage[] {
       const slug = metadataPath.split("/")[4];
       if (!slug) return undefined;
       return item.languages.flatMap((language) => {
-        const prefix = `${excersizesLocation}/${item.difficulty}/${slug}/${language}/`;
+        const prefix = `${exercisesLocation}/${item.difficulty}/${slug}/${language}/`;
         const beforePrefix = `${prefix}before/`;
         const afterPrefix = `${prefix}after/`;
         const changedFiles = Object.entries(afterModules)
@@ -70,11 +70,11 @@ function discoverExercises(): ExercisePackage[] {
     .sort((left, right) => left.item.id.localeCompare(right.item.id) || left.language.localeCompare(right.language));
 }
 
-function detectLanguages(excersizes : ExercisePackage[]): string[] {
+function detectLanguages(exercises : ExercisePackage[]): string[] {
   const languages = new Set<string>();
 
-  for (const excersize of excersizes) {
-    excersize.item.languages.forEach(language => languages.add(language));
+  for (const exercise of exercises) {
+    exercise.item.languages.forEach(language => languages.add(language));
   }
 
   return [...languages];
@@ -96,6 +96,20 @@ export class ExerciseController {
 
   listExercisesForLanguage(language : string): readonly ExercisePackage[] {
     return this.exercises.filter((exercise) => exercise.language === language);
+  }
+
+  listStoryExercises(language: string, group: string): readonly ExercisePackage[] {
+    return this.listExercisesForLanguage(language).filter((exercise) => {
+      if (exercise.item.storyGroup) return exercise.item.storyGroup === group;
+
+      // Existing exercises receive a useful provisional placement until their
+      // exercise metadata records a specific story group.
+      if (group === 'tutorials') return exercise.item.difficulty === 'tutorial';
+      if (group === 'first-queue') return exercise.item.difficulty === 'easy';
+      if (group === 'ai-assisted-queue') return exercise.item.difficulty === 'medium';
+      if (group === 'judgment-queue') return exercise.item.difficulty === 'hard';
+      return false;
+    });
   }
 
   listExercisesForLanguages(languages: readonly string[]): readonly ExercisePackage[] {

@@ -51,3 +51,6 @@ coverage/
 # Operating System Files
 .DS_Store
 Thumbs.db
+
+# Source artwork and other local reference materials
+/raw assets/

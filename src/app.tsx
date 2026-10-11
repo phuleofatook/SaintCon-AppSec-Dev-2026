@@ -20,32 +20,31 @@ function parseStoryBeat(hash: string) {
   return match ? match[1] : undefined;
 }
 
-type TrackEntry = { type: 'exercise'; exercise: ReturnType<ExerciseController['listExercisesForLanguage']>[number]; automatedReviewEnabled: boolean } | { type: 'story'; pageId: string };
+type TrackEntry = { type: 'exercise'; exercise: ReturnType<ExerciseController['listExercisesForLanguage']>[number] } | { type: 'story'; pageId: string } | { type: 'language-selection' };
 type ActiveTrack = { entries: TrackEntry[]; index: number };
 
 function createStoryEntries(controller: ExerciseController, language: string): TrackEntry[] {
   const entries: TrackEntry[] = [];
-  let automatedReviewEnabled = false;
   for (const beat of storyTrack) {
     if (beat.type === 'story') {
       if (storyPages[beat.pageId]) entries.push({ type: 'story', pageId: beat.pageId });
-      if ('enablesAutomatedReview' in beat && beat.enablesAutomatedReview) automatedReviewEnabled = true;
-    } else if (beat.type === 'conditional-exercises') {
-      const exercises = controller.listStoryExercises(language, beat.group);
-      if (exercises.length) {
-        if (storyPages[beat.pageId]) entries.push({ type: 'story', pageId: beat.pageId });
-        entries.push(...exercises.map((exercise) => ({ type: 'exercise' as const, exercise, automatedReviewEnabled })));
-      }
+    } else if (beat.type === 'language-selection') {
+      entries.push({ type: 'language-selection' });
+    } else if (beat.type === 'exercise') {
+      const exercise = controller.listExercisesForLanguage(language).find((candidate) => candidate.slug === beat.slug);
+      if (exercise) entries.push({ type: 'exercise', exercise });
     } else {
       const exercises = controller.listStoryExercises(language, beat.group);
-      entries.push(...exercises.map((exercise) => ({ type: 'exercise' as const, exercise, automatedReviewEnabled })));
+      entries.push(...exercises.map((exercise) => ({ type: 'exercise' as const, exercise })));
     }
   }
   return entries;
 }
 
 function entryHash(entry: TrackEntry) {
-  return entry.type === 'story' ? `story-page/${entry.pageId}` : `review/${entry.exercise.slug}/${entry.exercise.language}`;
+  if (entry.type === 'story') return `story-page/${entry.pageId}`;
+  if (entry.type === 'language-selection') return 'story';
+  return `review/${entry.exercise.slug}/${entry.exercise.language}`;
 }
 
 function modeFromHash(hash: string): AppMode | null {
@@ -92,12 +91,15 @@ export function App() {
         setTrack(null);
         setMode('ffa');
       } else if (nextHash === '#story') {
-        setTrack(null);
         setMode('story');
+        const index = track?.entries.findIndex((entry) => entry.type === 'language-selection') ?? -1;
+        if (track && index >= 0) setTrack({ ...track, index });
       } else if (track) {
         const review = parseReview(nextHash);
         const storyPageId = parseStoryBeat(nextHash);
-        const index = track.entries.findIndex((entry) => entry.type === 'story' ? entry.pageId === storyPageId : Boolean(review && entry.exercise.slug === review.slug && entry.exercise.language === (review.language ?? track.entries.find((candidate) => candidate.type === 'exercise')?.exercise.language)));
+        const index = track.entries.findIndex((entry) => entry.type === 'story'
+          ? entry.pageId === storyPageId
+          : entry.type === 'exercise' && Boolean(review && entry.exercise.slug === review.slug && entry.exercise.language === (review.language ?? track.entries.find((candidate) => candidate.type === 'exercise')?.exercise.language)));
         if (index >= 0) setTrack({ ...track, index });
       }
     };
@@ -127,16 +129,28 @@ export function App() {
     ];
     if (!exercises.length) return;
     setMode('ffa');
-    setTrack({ entries: exercises.map((exercise) => ({ type: 'exercise', exercise, automatedReviewEnabled: true })), index: 0 });
+    setTrack({ entries: exercises.map((exercise) => ({ type: 'exercise', exercise })), index: 0 });
     goTo(`review/${exercises[0].slug}/${exercises[0].language}`);
   };
-  const startStory = (language: string) => {
+  const beginStory = () => {
+    const languages = controllerRef.current.listLanguages();
+    const language = languages.includes('typescript') ? 'typescript' : languages[0];
+    if (!language) return;
     const entries = createStoryEntries(controllerRef.current, language);
     if (!entries.length) return;
-    window.sessionStorage.setItem('saintcon-story-language', language);
     setMode('story');
     setTrack({ entries, index: 0 });
     goTo(entryHash(entries[0]));
+  };
+  const selectStoryLanguage = (language: string) => {
+    const entries = createStoryEntries(controllerRef.current, language);
+    const languageStep = entries.findIndex((entry) => entry.type === 'language-selection');
+    const next = entries[languageStep + 1];
+    if (!next) return;
+    window.sessionStorage.setItem('saintcon-story-language', language);
+    setMode('story');
+    setTrack({ entries, index: languageStep + 1 });
+    goTo(entryHash(next));
   };
   const currentEntry = track?.entries[track.index];
   const previousEntry = track && track.index > 0 ? track.entries[track.index - 1] : undefined;
@@ -166,16 +180,15 @@ export function App() {
           menuHash={menuHash}
           progress={track && currentEntry?.type === 'exercise' ? { current: track.entries.slice(0, track.index + 1).filter((entry) => entry.type === 'exercise').length, total: track.entries.filter((entry) => entry.type === 'exercise').length } : undefined}
           completed={Boolean(track && !nextEntry)}
-          automatedReviewEnabled={currentEntry?.type === 'exercise' ? currentEntry.automatedReviewEnabled : true}
         />
       ) : hash === '#ffa' ? (
         <HomePage controller={controllerRef.current} onStartTrack={startTrack} />
       ) : hash === '#story' ? (
-        <StoryPage controller={controllerRef.current} onBeginMission={startStory} />
+        <StoryPage controller={controllerRef.current} onBeginMission={selectStoryLanguage} />
       ) : storyPage ? (
-        <StoryBeatPage page={storyPage} onBack={previousEntry ? () => goTo(entryHash(previousEntry)) : undefined} onContinue={() => nextEntry && goTo(entryHash(nextEntry))} onFinish={() => goTo(menuHash)} isFirst={!previousEntry} isLast={!nextEntry} />
+        <StoryBeatPage page={storyPage} onBack={previousEntry && previousEntry.type !== 'language-selection' ? () => goTo(entryHash(previousEntry)) : undefined} onContinue={() => nextEntry && goTo(entryHash(nextEntry))} onFinish={() => goTo(menuHash)} isFirst={!previousEntry || previousEntry.type === 'language-selection'} isLast={!nextEntry} />
       ) : (
-        <LandingPage onChooseStory={() => goTo('story')} onChooseFreeForAll={() => goTo('ffa')} />
+        <LandingPage onChooseStory={beginStory} onChooseFreeForAll={() => goTo('ffa')} />
       )}
     </>
   );

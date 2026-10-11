@@ -16,7 +16,6 @@ export function StoryBeatPage({ page, onBack, onContinue, onFinish, isFirst = fa
         <span class="visually-hidden">{content.imageAction.label}</span>
       </button>}
     </div>}
-    <div class="story-copy">{content.paragraphs.map((paragraph) => <p class="intro" key={paragraph}>{paragraph}</p>)}</div>
     <div class="story-navigation">
       {!isFirst && onBack && <button class="secondary-action" type="button" onClick={onBack}>&larr; Previous</button>}
       <button class="primary-action" type="button" onClick={isLast ? onFinish : onContinue}>{isLast ? 'Return to mission menu' : 'Next'} <span aria-hidden="true">&rarr;</span></button>

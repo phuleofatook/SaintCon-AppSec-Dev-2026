@@ -8,7 +8,7 @@ function prettyPrintChoice(answer: Choice) {
 }
 
 
-export function ReviewPage({ exercise, previousHref, nextExercise, nextHref, progress, completed = false, menuHash = 'home', automatedReviewEnabled = true }: { exercise: ExercisePackage; previousHref?: string; nextExercise?: ExercisePackage; nextHref?: string; progress?: { current: number; total: number }; completed?: boolean; menuHash?: string; automatedReviewEnabled?: boolean }) {
+export function ReviewPage({ exercise, previousHref, nextExercise, nextHref, progress, completed = false, menuHash = 'home' }: { exercise: ExercisePackage; previousHref?: string; nextExercise?: ExercisePackage; nextHref?: string; progress?: { current: number; total: number }; completed?: boolean; menuHash?: string }) {
   const [format, setFormat] = useState<DiffOutputFormat>('side-by-side');
   const [contextSize, setContextSize] = useState<number>(10);
   const [highlight, setHighlight] = useState<boolean>(true);
@@ -64,7 +64,7 @@ export function ReviewPage({ exercise, previousHref, nextExercise, nextHref, pro
             contextSize={contextSize} onContextSizeChange={setContextSize}
             highlight={highlight} onHighlightChange={setHighlight}
           />
-          {automatedReviewEnabled && <AiReview review={item.aiReview} />}
+          <AiReview review={item.aiReview} />
           <div class="decision">
             <div>
               <strong>What’s your recommendation?</strong>

@@ -1,0 +1,38 @@
+{
+  "id": "CR-31",
+  "difficulty": "hard",
+  "ticket": {
+    "title": "Migrate user identifiers to opaque IDs",
+    "description": "User records are moving from sequential numeric IDs to opaque identifiers. Update the user API and its DTOs to carry the new identifier format without weakening the validation boundary for request-supplied IDs.",
+    "requirements": [
+      "Represent user IDs consistently as opaque strings throughout the user API.",
+      "Update the user DTOs and service layer to use the new identifier type.",
+      "Only accept identifiers that match the approved opaque-ID format at the HTTP boundary."
+    ]
+  },
+  "pr": {
+    "title": "Refactor user API for opaque identifiers",
+    "description": "Converts user DTO and endpoint identifiers from numeric values to strings as part of the opaque-ID migration.",
+    "author": "orbit-dev",
+    "sourceBranch": "orbit-dev/opaque-user-ids",
+    "targetBranch": "main"
+  },
+  "languages": ["typescript", "java", "python", "c"],
+  "defaultLanguage": "typescript",
+  "aiReview": {
+    "verdict": "deny",
+    "summary": "Most of this change is a mechanical identifier and DTO rename. Focus on the HTTP route that receives a user ID: does it still enforce the approved opaque-ID format before the value enters the application?",
+    "findings": [
+      {
+        "severity": "high",
+        "title": "Validate the user identifier at the request boundary",
+        "detail": "The refactor removes the numeric route constraint/coercion and passes the path value through as an unrestricted string. A path parameter is attacker-controlled input; validate it against the approved opaque-ID format before it reaches services or persistence, and reject malformed values.",
+        "file": "the user request handler"
+      }
+    ]
+  },
+  "proposedAnswer": {
+    "answer": "deny",
+    "reason": "The DTO migration is largely mechanical, but the changed user route accepts arbitrary path strings instead of enforcing the approved opaque-ID format. The request boundary must validate the identifier before this refactor can ship."
+  }
+}

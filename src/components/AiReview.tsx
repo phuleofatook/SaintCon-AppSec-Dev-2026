@@ -1,7 +1,7 @@
 import { CachedAiReview } from "../types/StandardTypes";
 
-export function AiReview({ review }: { review: CachedAiReview }) {
-  return <details class="context-panel ai-review">
+export function AiReview({ id, review }: { id?: string; review: CachedAiReview }) {
+  return <details id={id} class="context-panel ai-review">
     <summary>
       <span>
         <span class="section-label">APE INPUT™ CODE REVIEW</span>

@@ -30,10 +30,7 @@ function createStoryEntries(controller: ExerciseController, language: string): T
       if (storyPages[beat.pageId]) entries.push({ type: 'story', pageId: beat.pageId });
     } else if (beat.type === 'language-selection') {
       entries.push({ type: 'language-selection' });
-    } else if (beat.type === 'exercise') {
-      const exercise = controller.listExercisesForLanguage(language).find((candidate) => candidate.slug === beat.slug);
-      if (exercise) entries.push({ type: 'exercise', exercise });
-    } else {
+    } else if (beat.type === 'exercises') {
       const exercises = controller.listStoryExercises(language, beat.group);
       entries.push(...exercises.map((exercise) => ({ type: 'exercise' as const, exercise })));
     }
@@ -160,10 +157,15 @@ export function App() {
   const onLanding = !exercise && !storyPage && hash !== '#ffa' && hash !== '#story';
   const showHeader = !onLanding || (mode === 'story' && hash !== '' && hash !== '#home');
   const menuHash = mode === 'ffa' ? 'ffa' : mode === 'story' ? 'story' : 'home';
+  const navigableEntries = track?.entries ?? [];
+  const currentStep = track && currentEntry ? track.index + 1 : 0;
+  const trackProgressLabel = mode === 'story'
+    ? `MISSION STEP ${currentStep} OF ${navigableEntries.length}`
+    : `EXERCISE ${currentStep} OF ${navigableEntries.length}`;
 
   return (
     <>
-      {showHeader && <Header theme={theme} onThemeChange={setTheme} />}
+      {showHeader && <Header theme={theme} onThemeChange={setTheme} menuHref={menuHash === 'home' ? undefined : `#${menuHash}`} menuLabel={menuHash === 'story' ? 'Mission menu' : 'Exercise menu'} />}
       {onLanding && (
         <button class="theme-toggle landing-theme-toggle" type="button" aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
           <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>
@@ -175,18 +177,22 @@ export function App() {
           key={exercise.slug + exercise.language}
           exercise={exercise}
           previousHref={mode === 'story' && previousEntry ? entryHash(previousEntry) : undefined}
-          nextExercise={nextEntry?.type === 'exercise' ? nextEntry.exercise : undefined}
           nextHref={nextEntry ? entryHash(nextEntry) : undefined}
-          menuHash={menuHash}
-          progress={track && currentEntry?.type === 'exercise' ? { current: track.entries.slice(0, track.index + 1).filter((entry) => entry.type === 'exercise').length, total: track.entries.filter((entry) => entry.type === 'exercise').length } : undefined}
+          menuHash={mode === 'story' ? 'home' : menuHash}
+          trackProgressLabel={trackProgressLabel}
           completed={Boolean(track && !nextEntry)}
         />
       ) : hash === '#ffa' ? (
         <HomePage controller={controllerRef.current} onStartTrack={startTrack} />
       ) : hash === '#story' ? (
-        <StoryPage controller={controllerRef.current} onBeginMission={selectStoryLanguage} />
+        <StoryPage
+          controller={controllerRef.current}
+          onBeginMission={selectStoryLanguage}
+          onPrevious={previousEntry ? () => goTo(entryHash(previousEntry)) : undefined}
+          progressLabel={track && currentEntry?.type === 'language-selection' ? trackProgressLabel : undefined}
+        />
       ) : storyPage ? (
-        <StoryBeatPage page={storyPage} onBack={previousEntry && previousEntry.type !== 'language-selection' ? () => goTo(entryHash(previousEntry)) : undefined} onContinue={() => nextEntry && goTo(entryHash(nextEntry))} onFinish={() => goTo(menuHash)} isFirst={!previousEntry || previousEntry.type === 'language-selection'} isLast={!nextEntry} />
+        <StoryBeatPage page={storyPage} onBack={previousEntry ? () => goTo(entryHash(previousEntry)) : undefined} onContinue={() => nextEntry && goTo(entryHash(nextEntry))} onFinish={() => goTo('home')} progressLabel={trackProgressLabel} isFirst={!previousEntry} isLast={!nextEntry} />
       ) : (
         <LandingPage onChooseStory={beginStory} onChooseFreeForAll={() => goTo('ffa')} />
       )}

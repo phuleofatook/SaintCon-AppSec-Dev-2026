@@ -32,6 +32,8 @@ export function DiffView(props: DiffViewProps) {
   
   useEffect(() => {
     if (!target.current) return;
+    const previousScrollY = window.scrollY;
+    const previousHorizontalScroll = Array.from(target.current.querySelectorAll<HTMLElement>('.d2h-file-diff')).map((element) => element.scrollLeft);
     target.current.innerHTML = '';
 
     const exerciseDiff = exercise.changedFiles.map((file) => 
@@ -44,6 +46,14 @@ export function DiffView(props: DiffViewProps) {
       matching: 'lines',
       highlight: highlight ?? false
     }).draw();
+
+    const fileDiffs = target.current.querySelectorAll<HTMLElement>('.d2h-file-diff');
+    fileDiffs.forEach((element, index) => {
+      element.id = `review-file-${index}`;
+      element.scrollLeft = previousHorizontalScroll[index] ?? 0;
+    });
+
+    requestAnimationFrame(() => window.scrollTo({ top: previousScrollY }));
   }, [exercise, format, contextSize, highlight]);
 
   return <>

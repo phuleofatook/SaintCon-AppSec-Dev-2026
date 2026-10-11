@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { AiReview } from '../components/AiReview';
 import { DiffView, type DiffOutputFormat } from '../components/DiffView';
+import { TrackNavigator } from '../components/TrackNavigator';
 import { Choice, type ExercisePackage } from '../types/StandardTypes'
 
 function prettyPrintChoice(answer: Choice) {
@@ -8,34 +9,64 @@ function prettyPrintChoice(answer: Choice) {
 }
 
 
-export function ReviewPage({ exercise, previousHref, nextExercise, nextHref, progress, completed = false, menuHash = 'home' }: { exercise: ExercisePackage; previousHref?: string; nextExercise?: ExercisePackage; nextHref?: string; progress?: { current: number; total: number }; completed?: boolean; menuHash?: string }) {
-  const [format, setFormat] = useState<DiffOutputFormat>('side-by-side');
+export function ReviewPage({ exercise, previousHref, nextHref, trackProgressLabel, completed = false, menuHash = 'home' }: { exercise: ExercisePackage; previousHref?: string; nextHref?: string; trackProgressLabel: string; completed?: boolean; menuHash?: string }) {
+  const [format, setFormat] = useState<DiffOutputFormat>(() => window.matchMedia('(max-width: 760px)').matches ? 'line-by-line' : 'side-by-side');
   const [contextSize, setContextSize] = useState<number>(10);
   const [highlight, setHighlight] = useState<boolean>(true);
   const [submittedChoice, setSubmittedChoice] = useState<Choice | null>(null);
+  const [toolsOpen, setToolsOpen] = useState(false);
   const { item, changedFiles } = exercise;
   const recommendation = item.proposedAnswer;
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [exercise.slug, exercise.language]);
 
+  useEffect(() => {
+    if (!toolsOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setToolsOpen(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [toolsOpen]);
+
+  const navigateWithinReview = (id: string) => {
+    setToolsOpen(false);
+    requestAnimationFrame(() => {
+      const section = document.getElementById(id);
+      if (!section) return;
+
+      let expandableSection: HTMLElement | null = section;
+      while (expandableSection) {
+        if (expandableSection instanceof HTMLDetailsElement) expandableSection.open = true;
+        expandableSection = expandableSection.parentElement;
+      }
+
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
   return <>
     <main class="review-page">
       <div class="review-navigation">
-        <a class="back" href={`#${menuHash}`}>Back to main menu</a>
-        {previousHref && <a class="track-page-link" href={`#${previousHref}`}>&larr; Previous page</a>}
-        {nextHref && <a class="track-page-link" href={`#${nextHref}`}>Next page &rarr;</a>}
+        <TrackNavigator
+          variant="review"
+          previous={previousHref ? { href: `#${previousHref}` } : undefined}
+          next={nextHref ? { href: `#${nextHref}` } : undefined}
+          progressLabel={trackProgressLabel}
+        />
+        <button class="review-tools-trigger" type="button" aria-expanded={toolsOpen} aria-controls="review-tools-panel" onClick={() => setToolsOpen(true)}>Review tools</button>
       </div>
       <section class="review-heading">
         <div>
-          <p class="eyebrow">{progress ? `TRACK EXERCISE ${progress.current}/${progress.total} · ` : 'EXERCISE '}{item.id} · {item.difficulty.toUpperCase()}</p>
+          <p class="eyebrow">EXERCISE {item.id} · {item.difficulty.toUpperCase()}</p>
           <h1>{item.pr.title}</h1>
           <p class="byline">{item.pr.author} proposes merging <code>{item.pr.sourceBranch}</code> into <code>{item.pr.targetBranch}</code>
           </p>
         </div>
       </section>
       <section class="review-content">
-        <details class="context-panel ticket" open>
+        <details id="review-ticket" class="context-panel ticket" open>
           <summary>
             <span>
               <span class="section-label">TRACKING TICKET</span>
@@ -51,7 +82,7 @@ export function ReviewPage({ exercise, previousHref, nextExercise, nextHref, pro
             </ul>
           </div>
         </details>
-        <section class="pull-request">
+        <section id="review-changes" class="pull-request">
           <div class="pr-summary">
             <div>
               <p class="section-label">PROPOSED PULL REQUEST</p>
@@ -64,8 +95,8 @@ export function ReviewPage({ exercise, previousHref, nextExercise, nextHref, pro
             contextSize={contextSize} onContextSizeChange={setContextSize}
             highlight={highlight} onHighlightChange={setHighlight}
           />
-          <AiReview review={item.aiReview} />
-          <div class="decision">
+          <AiReview id="review-ai" review={item.aiReview} />
+          <div id="review-decision" class="decision">
             <div>
               <strong>What’s your recommendation?</strong>
               <span>Choose the action you would take, then compare it with the exercise guidance.</span>
@@ -78,6 +109,29 @@ export function ReviewPage({ exercise, previousHref, nextExercise, nextHref, pro
         </section>
       </section>
     </main>
+    {toolsOpen && <div class="review-tools-backdrop" onClick={() => setToolsOpen(false)}>
+      <aside id="review-tools-panel" class="review-tools-panel" role="dialog" aria-modal="true" aria-label="Review tools" onClick={(event) => event.stopPropagation()}>
+        <div class="review-tools-heading">
+          <div>
+            <p class="section-label">REVIEW TOOLS</p>
+            <strong>Navigate your review</strong>
+          </div>
+          <button class="review-tools-close" type="button" aria-label="Close review tools" onClick={() => setToolsOpen(false)}>×</button>
+        </div>
+        <nav class="review-tools-nav" aria-label="Review sections">
+          <button type="button" onClick={() => navigateWithinReview('review-ticket')}>Ticket &amp; requirements</button>
+          <button type="button" onClick={() => navigateWithinReview('review-changes')}>Changed code</button>
+          <button type="button" onClick={() => navigateWithinReview('review-ai')}>Automated review</button>
+          <button type="button" onClick={() => navigateWithinReview('review-decision')}>Your decision</button>
+        </nav>
+        <section class="review-file-list" aria-labelledby="review-files-title">
+          <p id="review-files-title" class="section-label">CHANGED FILES · {changedFiles.length}</p>
+          <ul>
+            {changedFiles.map((file, index) => <li key={file.path}><button type="button" onClick={() => navigateWithinReview(`review-file-${index}`)}><code>{file.path}</code></button></li>)}
+          </ul>
+        </section>
+      </aside>
+    </div>}
     {submittedChoice !== null && <div class="comparison-backdrop" onClick={() => setSubmittedChoice(null)}>
       <section class="comparison-dialog" role="dialog" aria-modal="true" aria-labelledby="comparison-title" onClick={(event) => event.stopPropagation()}>
         <button class="comparison-close" type="button" aria-label="Close comparison" onClick={() => setSubmittedChoice(null)}>×</button>
@@ -97,8 +151,9 @@ export function ReviewPage({ exercise, previousHref, nextExercise, nextHref, pro
             setSubmittedChoice(null);
             window.location.hash = previousHref ?? menuHash;
           }}>{previousHref ? 'Return to previous story page' : 'Return to main menu'}</button>
-          {nextHref && <button class="comparison-done" type="button" onClick={() => { window.location.hash = nextHref; }}>{nextExercise ? 'Do next exercise' : 'Continue story'} <span aria-hidden="true">→</span></button>}
+          {nextHref && <button class="comparison-done" type="button" onClick={() => { window.location.hash = nextHref; }}>Next <span aria-hidden="true">→</span></button>}
           {completed && <p class="track-complete" role="status">Track complete — you reviewed every exercise in this set.</p>}
+          {completed && <button class="comparison-done" type="button" onClick={() => { window.location.hash = menuHash; }}>{menuHash === 'story' ? 'Finish mission' : 'Return to exercise menu'} <span aria-hidden="true">→</span></button>}
           <button class="review-again" type="button" onClick={() => setSubmittedChoice(null)}>Back to review</button>
         </div>
       </section>

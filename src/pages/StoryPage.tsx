@@ -1,5 +1,6 @@
 import { useState } from 'preact/hooks';
 import type { ExerciseController } from '../services/exercise-controller';
+import { TrackNavigator } from '../components/TrackNavigator';
 
 function languageLabel(item: string) {
   if (item === 'typescript') return 'TypeScript';
@@ -8,7 +9,12 @@ function languageLabel(item: string) {
   return item.toUpperCase();
 }
 
-export function StoryPage({ controller, onBeginMission }: { controller: ExerciseController; onBeginMission: (language: string) => void }) {
+export function StoryPage({ controller, onBeginMission, onPrevious, progressLabel }: {
+  controller: ExerciseController;
+  onBeginMission: (language: string) => void;
+  onPrevious?: () => void;
+  progressLabel?: string;
+}) {
   const languages = controller.listLanguages();
   const [language, setLanguage] = useState(languages.includes('typescript') ? 'typescript' : languages[0] ?? '');
   const ready = controller.listExercisesForLanguage(language).length > 0;
@@ -34,6 +40,11 @@ export function StoryPage({ controller, onBeginMission }: { controller: Exercise
         </div>
         <button class="primary-action" type="button" disabled={!ready} onClick={() => onBeginMission(language)}>Begin mission <span>→</span></button>
       </section>
+      {progressLabel && <TrackNavigator
+        previous={onPrevious ? { onClick: onPrevious } : undefined}
+        next={ready ? { onClick: () => onBeginMission(language) } : undefined}
+        progressLabel={progressLabel}
+      />}
     </main>
   );
 }

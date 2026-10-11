@@ -1,0 +1,2 @@
+VERSION = '2.4.0'
+PAGE_SIZE = 50

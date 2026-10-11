@@ -1,7 +1,7 @@
 .ai-review {
     margin-bottom: 12px;
-    border-color: #294b60;
-    background: rgba(17, 42, 59, .42);
+    border-color: var(--color-blue);
+    background: color-mix(in srgb, var(--color-blue) 42%, transparent);
 }
 
 .ai-review summary {
@@ -14,13 +14,13 @@
 
 .ai-disclaimer {
     margin: 0 0 16px;
-    color: #91b1c4;
+    color: var(--console-muted, var(--color-cyan));
     font-size: 12px !important;
 }
 
 .ai-focus-label {
     margin: 18px 0 6px;
-    color: #d8e8f1;
+    color: var(--console-display, var(--color-cyan));
     font-size: 13px;
 }
 
@@ -35,7 +35,7 @@
 
 .ai-findings li {
     padding: 12px 0;
-    border-top: 1px solid rgba(166, 205, 226, .18);
+    border-top: 1px solid color-mix(in srgb, var(--color-cyan) 18%, transparent);
 }
 
 .ai-findings li+li {
@@ -44,13 +44,13 @@
 
 .ai-findings strong {
     display: block;
-    color: #e1f0f7;
+    color: var(--console-display, var(--color-cyan));
 }
 
 .ai-findings code {
     display: inline-block;
     margin-top: 4px;
-    color: #8ecbe9;
+    color: var(--color-cyan);
     font: 11px ui-monospace, monospace;
 }
 

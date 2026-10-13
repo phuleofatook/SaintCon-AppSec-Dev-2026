@@ -9,6 +9,10 @@ out/
 lib/
 *.tsbuildinfo
 
+# Python bytecode caches
+__pycache__/
+*.py[cod]
+
 # Logs
 logs
 *.log

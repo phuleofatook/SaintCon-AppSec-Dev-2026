@@ -22,6 +22,6 @@
   },
   "proposedAnswer": {
     "answer": "deny",
-    "reason": "New code introduces a new SQLi vilnerability"
+    "reason": "New code introduces a new SQLi vulnerability"
   }
 }

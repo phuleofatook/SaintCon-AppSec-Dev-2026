@@ -3,7 +3,7 @@
   "difficulty": "hard",
   "ticket": {
     "title": "Identify sus crew",
-    "description": "Everyone that the system should detect as sus is inocent and everyone who is innocent is being marked as sus.  We need to fix it so that we stop throwing innocent people out the air lock!",
+    "description": "Everyone that the system should detect as sus is innocent and everyone who is innocent is being marked as sus.  We need to fix it so that we stop throwing innocent people out the air lock!",
     "requirements": ["Return the first suspicious crew member"]
   },
   "pr": {
@@ -22,6 +22,6 @@
   },
   "proposedAnswer": {
     "answer": "approve",
-    "reason": "The code is better, but not perfect.  The SQL injection remains, but the functional requirement has been fixed.  Whether this is acceptable or not depends on your risk tollerance."
+    "reason": "The code is better, but not perfect.  The SQL injection remains, but the functional requirement has been fixed.  Whether this is acceptable or not depends on your risk tolerance."
   }
 }

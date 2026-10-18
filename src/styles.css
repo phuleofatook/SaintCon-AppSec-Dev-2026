@@ -697,6 +697,38 @@ button {
 .difficulty-option input { width: 15px; height: 15px; margin: 0; accent-color: var(--color-accent); }
 .difficulty-option:focus-within { outline: 2px solid var(--color-cyan); outline-offset: 2px; }
 
+.length-filter {
+    display: grid;
+    gap: 7px;
+    color: #91aaba;
+    font: 10px ui-monospace, monospace;
+    letter-spacing: .1em;
+}
+
+.length-current {
+    justify-self: center;
+    margin-bottom: -2px;
+    color: #d8e9f1;
+    font: 13px ui-monospace, monospace;
+    letter-spacing: 0;
+}
+
+.length-control {
+    display: grid;
+    grid-template-columns: auto minmax(90px, 145px) auto;
+    align-items: center;
+    gap: 9px;
+    min-height: 39px;
+    color: #d8e9f1;
+    font: 13px ui-monospace, monospace;
+    letter-spacing: 0;
+}
+
+.length-control input { width: 100%; margin: 0; accent-color: var(--color-accent); }
+.length-control input:focus-visible { outline: 2px solid var(--color-cyan); outline-offset: 2px; }
+.length-control input:disabled { opacity: .5; }
+.length-control > span:last-child { min-width: 1ch; text-align: right; }
+
 .exercise-paths { max-width: 850px; }
 .practice-setup {
     display: grid;
@@ -706,6 +738,8 @@ button {
     margin-top: 15px;
 }
 .practice-action { text-align: right; }
+/* Leave room for the raised primary-action shadow before the availability label. */
+.practice-action .set-count { margin-top: 16px; }
 .practice-setup .primary-action {
     margin: 0;
     border: 0;

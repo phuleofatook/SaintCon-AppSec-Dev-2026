@@ -9,10 +9,11 @@ const difficulties = [
   { value: 'hard', label: 'Hard' },
 ];
 
-export function HomePage({ controller, onStartTrack }: { controller: ExerciseController; onStartTrack: (language: string, difficulties: readonly string[]) => void }) {
+export function HomePage({ controller, onStartTrack }: { controller: ExerciseController; onStartTrack: (language: string, difficulties: readonly string[], maxExercises: number) => void }) {
   const languages = controller.listLanguages();
   const [language, setLanguage] = useState(languages.includes('typescript') ? 'typescript' : languages[0] ?? '');
   const [selectedDifficulties, setSelectedDifficulties] = useState<string[]>([]);
+  const [trackLength, setTrackLength] = useState(1);
   const toggleDifficulty = (difficulty: string) => {
     setSelectedDifficulties((current) => current.includes(difficulty)
       ? current.filter((value) => value !== difficulty)
@@ -28,6 +29,8 @@ export function HomePage({ controller, onStartTrack }: { controller: ExerciseCon
       exercises: matching.filter(({ item }) => item.difficulty === value),
     }))
     .filter(({ exercises }) => exercises.length > 0);
+  const maxTrackLength = Math.max(1, matching.length);
+  const selectedTrackLength = Math.min(trackLength, matching.length);
 
   return <main class="launchpad">
     <a class="back" href="#home">Back to title</a>
@@ -59,6 +62,22 @@ export function HomePage({ controller, onStartTrack }: { controller: ExerciseCon
             </label>)}
           </div>
         </fieldset>
+        <label class="length-filter">EXERCISES
+          <output class="length-current">{selectedTrackLength || 1}</output>
+          <span class="length-control">
+            <span>1</span>
+            <input
+              type="range"
+              min="1"
+              max={maxTrackLength}
+              value={selectedTrackLength || 1}
+              disabled={!matching.length}
+              onInput={(event) => setTrackLength(Number((event.currentTarget as HTMLInputElement).value))}
+              aria-label="Number of exercises in randomized track"
+            />
+            <span>{matching.length}</span>
+          </span>
+        </label>
       </div>
     </section>
 
@@ -70,7 +89,7 @@ export function HomePage({ controller, onStartTrack }: { controller: ExerciseCon
           <p class="filter-hint">We’ll shuffle the matching exercises into a review queue.</p>
         </div>
         <div class="practice-action">
-          <button class="primary-action" type="button" disabled={!matching.length} onClick={() => onStartTrack(language, selectedDifficulties)}>Start exercise track <span>→</span></button>
+          <button class="primary-action" type="button" disabled={!matching.length} onClick={() => onStartTrack(language, selectedDifficulties, selectedTrackLength)}>Start exercise track <span>→</span></button>
           <p class="set-count">{matching.length} {matching.length === 1 ? 'exercise' : 'exercises'} available</p>
         </div>
       </section>

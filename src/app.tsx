@@ -116,14 +116,14 @@ export function App() {
   const goTo = (nextHash: string) => {
     window.location.hash = nextHash;
   };
-  const startTrack = (language: string, difficulties: readonly string[]) => {
+  const startTrack = (language: string, difficulties: readonly string[], maxExercises: number) => {
     const randomized = controllerRef.current.listExercisesForLanguage(language)
       .filter((candidate) => difficulties.length === 0 || difficulties.includes(candidate.item.difficulty))
       .sort(() => Math.random() - 0.5);
     const exercises = [
       ...randomized.filter((candidate) => candidate.item.difficulty === 'tutorial'),
       ...randomized.filter((candidate) => candidate.item.difficulty !== 'tutorial'),
-    ];
+    ].slice(0, maxExercises);
     if (!exercises.length) return;
     setMode('ffa');
     setTrack({ entries: exercises.map((exercise) => ({ type: 'exercise', exercise })), index: 0 });

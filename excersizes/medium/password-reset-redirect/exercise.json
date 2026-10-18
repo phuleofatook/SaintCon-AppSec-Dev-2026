@@ -1,5 +1,5 @@
 {
-  "id": "AR-01",
+  "id": "M-01",
   "difficulty": "medium",
   "ticket": {
     "title": "Preserve the return destination after a password reset",

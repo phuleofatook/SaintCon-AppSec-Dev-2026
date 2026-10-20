@@ -10,7 +10,7 @@ public class ScheduleFetcher {
 
     public static List<Flight> getFlightSchedule(Connection connection, String flightId)
             throws SQLException {
-        String sql = "SELECT flight_id, flight_name FROM flight WHERE flight_id = " + flightId;
+        String sql = "SELECT flight_id, flight_name FROM flight WHERE flight_id = '" + flightId + "'";
         List<Flight> flights = new ArrayList<>();
         try (Statement statement = connection.createStatement();
              ResultSet rows = statement.executeQuery(sql)) {

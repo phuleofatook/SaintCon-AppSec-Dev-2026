@@ -1,39 +1,20 @@
 from dataclasses import dataclass
-from datetime import datetime
-
-from psycopg_pool import AsyncConnectionPool
-from flight_builder import build_flight
-
-
-pool = AsyncConnectionPool()
-
+from typing import Protocol
 
 @dataclass
 class Flight:
-    flightId: str  # UUID
-    flightName: str
-
-    departureId: int
-    departureName: str
-
-    destinationId: int
-    destinationName: str
-
-    takeOff: datetime
-    landing: datetime
+    flight_id: str
+    flight_name: str
 
 
-async def getflightSchedule(flightId: str) -> list[Flight]:
+class Database(Protocol):
+    async def query(self, sql: str) -> list[Flight]: ...
+
+
+async def get_flight_schedule(flight_id: str, database: Database) -> list[Flight]:
     sql = f"""
-        SELECT f.flight_id, f.flight_name, f.takeoff, f.landing,
-            depart.planet_id AS departureId, depart.planet_name AS departureName,
-            dest.planet_id AS destinationId, dest.planet_name AS destinationName
+        SELECT f.flight_id, f.flight_name
         FROM flight f
-            JOIN planets depart USING (planet_id)
-            JOIN planets dest USING (planet_id)
-        WHERE f.flight_id = {flightId}
+        WHERE f.flight_id = '{flight_id}'
     """
-
-    result = await pool.query(sql)
-
-    return result.rows
+    return await database.query(sql)

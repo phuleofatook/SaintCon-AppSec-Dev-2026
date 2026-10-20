@@ -3,15 +3,15 @@
   "difficulty": "medium",
   "ticket": {
     "title": "Preserve the return destination after a password reset",
-    "description": "A passenger can start a password reset while viewing a protected Spaceways page. The reset request carries that page as `returnTo`, and the passenger should go back there after choosing a new password. Review how that request value travels through the changed files and decide whether the emailed link keeps it inside Spaceways.",
+    "description": "A passenger can start a password reset while viewing a protected Spaceways page. The reset request carries that page as `returnTo`, and the passenger should go back there after choosing a new password. Review how that request value travels through the changed files and decide whether the reset flow keeps the passenger inside Spaceways.",
     "requirements": [
       "Accept an optional returnTo value from the reset request and preserve it in the password-reset link.",
-      "A reset email must never send the passenger to a destination outside the Spaceways application."
+      "The post-reset redirect must never send the passenger to a destination outside the Spaceways application."
     ]
   },
   "pr": {
     "title": "Keep passenger return path in password reset emails",
-    "description": "Passes the requested return path from the password-reset handler into the link builder so passengers can resume their journey after resetting a password.",
+    "description": "Passes the requested return path through the password-reset flow so passengers can resume their journey after resetting a password.",
     "author": "orbit-dev",
     "sourceBranch": "orbit-dev/reset-return-path",
     "targetBranch": "main"
@@ -20,24 +20,24 @@
   "defaultLanguage": "typescript",
   "aiReview": {
     "verdict": "deny",
-    "summary": "Follow `returnTo` through both changed files, then compare the resulting link behavior with the ticket's destination requirement.",
+    "summary": "Follow `returnTo` through all three changed files, then compare the resulting redirect behavior with the ticket's destination requirement.",
     "findings": [
       {
         "severity": "high",
-        "title": "Inspect how the reset link handles its destination",
-        "detail": "Check whether the link builder distinguishes an application path from a destination outside Spaceways.",
-        "file": "src/reset-link.ts"
+        "title": "Inspect the post-reset redirect destination",
+        "detail": "Check whether the completion handler distinguishes an application path from a destination outside Spaceways before redirecting the passenger.",
+        "file": "src/complete-password-reset.ts"
       },
       {
         "severity": "medium",
         "title": "Trace the request value across the changed files",
-        "detail": "Identify where `returnTo` originates and how the receiving function uses it to construct the email link.",
+        "detail": "Identify where `returnTo` originates, how it is preserved in the reset link, and how it is used after the reset completes.",
         "file": "src/request-password-reset.ts"
       }
     ]
   },
   "proposedAnswer": {
     "answer": "deny",
-    "reason": "The handler passes request-controlled returnTo to the link builder, and the builder embeds it in the trusted reset email without validating the destination."
+    "reason": "The handler preserves request-controlled returnTo in the trusted reset email, and the completion handler redirects to it without validating that it is an internal Spaceways path."
   }
 }

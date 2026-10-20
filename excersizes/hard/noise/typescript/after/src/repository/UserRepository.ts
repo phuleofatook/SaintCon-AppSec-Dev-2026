@@ -1,5 +1,5 @@
 export class UserRepository {
-  async findById(id: number): Promise<Record<string, unknown>> {
+  async findById(id: string): Promise<Record<string, unknown>> {
     return { id, name: 'Example User' };
   }
 

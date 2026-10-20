@@ -1,28 +1,16 @@
 from dataclasses import dataclass
-from datetime import datetime
-
-from psycopg import Connection
-from flight_builder import build_flight
-
-
-pool = Connection()
-
+from typing import Protocol
 
 @dataclass
 class Flight:
-    flight_id: str  # UUID
+    flight_id: str
     flight_name: str
 
-    departure_id: int
-    departure_name: str
 
-    destination_id: int
-    destination_name: str
-
-    take_off: datetime
-    landing: datetime
+class Database(Protocol):
+    async def query(self, sql: str) -> list[Flight]: ...
 
 
-async def get_flight_schedule(flight_id: str) -> list[Flight]:
+async def get_flight_schedule(flight_id: str, database: Database) -> list[Flight]:
     # TODO: implement me
     return []

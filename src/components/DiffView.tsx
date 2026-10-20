@@ -41,7 +41,7 @@ export function DiffView(props: DiffViewProps) {
     .join('\n');
 
     new Diff2HtmlUI(target.current, exerciseDiff, { 
-      drawFileList: false,  //TODO: show.  Requires getting the links on it to work
+      drawFileList: false,
       outputFormat: format, 
       matching: 'lines',
       highlight: highlight ?? false

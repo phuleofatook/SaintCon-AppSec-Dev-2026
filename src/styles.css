@@ -297,6 +297,18 @@ button {
     border: 0;
 }
 
+.build-info {
+    position: fixed;
+    /* Keep this passive label away from the fixed review-tools control. */
+    left: max(14px, env(safe-area-inset-left));
+    bottom: 10px;
+    z-index: 20;
+    color: rgba(184, 212, 226, .72);
+    font: 10px ui-monospace, "Cascadia Code", Consolas, monospace;
+    letter-spacing: .04em;
+    pointer-events: none;
+}
+
 .site-header {
     width: min(1160px, calc(100% - 48px));
     margin: auto;

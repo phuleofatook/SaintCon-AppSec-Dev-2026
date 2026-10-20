@@ -5,6 +5,7 @@ import { HomePage } from './pages/HomePage';
 import { StoryPage } from './pages/StoryPage';
 import { ReviewPage } from './pages/ReviewPage';
 import { Header } from './components/Header';
+import { BuildInfo } from './components/BuildInfo';
 import { storyPages, storyTrack } from './story/story-content';
 import { StoryBeatPage } from './pages/StoryBeatPage';
 
@@ -165,6 +166,7 @@ export function App() {
 
   return (
     <>
+      <BuildInfo />
       {showHeader && <Header theme={theme} onThemeChange={setTheme} menuHref={menuHash === 'home' ? undefined : `#${menuHash}`} menuLabel={menuHash === 'story' ? 'Mission menu' : 'Exercise menu'} />}
       {onLanding && (
         <button class="theme-toggle landing-theme-toggle" type="button" aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>

@@ -41,4 +41,8 @@ npm run preview
 The entry page is in `index.html`; TypeScript lives in `src/main.ts` and its styles in `src/styles.css`.
 
 ## References
+### Con
 https://saintcon.org/communities/appsec/
+
+### Subject matter
+https://claude.dev/blog/solving-code-review-at-anthropic/

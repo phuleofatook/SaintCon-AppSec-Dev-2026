@@ -100,6 +100,11 @@ export function ReviewPage({ exercise, previousHref, nextHref, trackProgressLabe
             <div>
               <strong>What’s your recommendation?</strong>
               <span>Choose the action you would take, then compare it with the exercise guidance.</span>
+              <ul class="decision-checklist" aria-label="Before deciding, verify">
+                <li>Intent: does the change satisfy the ticket?</li>
+                <li>Impact: does the diff introduce a bug or security risk?</li>
+                <li>Evidence: did you verify any automated findings yourself?</li>
+              </ul>
             </div>
             <div class="decision-buttons">
               <button class="deny" type="button" onClick={() => setSubmittedChoice(Choice.REJECT)}>Deny</button>

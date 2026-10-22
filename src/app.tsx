@@ -166,7 +166,7 @@ export function App() {
 
   return (
     <>
-      <BuildInfo />
+      {onLanding && <BuildInfo />}
       {showHeader && <Header theme={theme} onThemeChange={setTheme} menuHref={menuHash === 'home' ? undefined : `#${menuHash}`} menuLabel={menuHash === 'story' ? 'Mission menu' : 'Exercise menu'} />}
       {onLanding && (
         <button class="theme-toggle landing-theme-toggle" type="button" aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>

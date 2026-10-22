@@ -299,9 +299,8 @@ button {
 
 .build-info {
     position: fixed;
-    /* Keep this passive label away from the fixed review-tools control. */
-    left: max(14px, env(safe-area-inset-left));
-    bottom: 10px;
+    right: max(14px, env(safe-area-inset-right));
+    bottom: max(10px, env(safe-area-inset-bottom));
     z-index: 20;
     color: rgba(184, 212, 226, .72);
     font: 10px ui-monospace, "Cascadia Code", Consolas, monospace;
@@ -1341,6 +1340,22 @@ button {
     font-size: 13px;
 }
 
+.decision-checklist {
+    display: grid;
+    gap: 3px;
+    margin: 12px 0 0;
+    padding: 0;
+    color: #9db3c1;
+    font-size: 12px;
+    list-style: none;
+}
+
+.decision-checklist li::before {
+    content: '□';
+    margin-right: 7px;
+    color: var(--color-cyan);
+}
+
 .decision-buttons {
     display: flex;
     gap: 9px;
@@ -1522,7 +1537,8 @@ html[data-theme="light"] .byline,
 html[data-theme="light"] .ticket p,
 html[data-theme="light"] .ticket li,
 html[data-theme="light"] .pr-summary p,
-html[data-theme="light"] .decision span {
+html[data-theme="light"] .decision span,
+html[data-theme="light"] .decision-checklist {
     color: #526c7d;
 }
 
@@ -2011,7 +2027,8 @@ html:not([data-theme="light"]) .briefing p,
 html:not([data-theme="light"]) .ticket p,
 html:not([data-theme="light"]) .ticket li,
 html:not([data-theme="light"]) .pr-summary p,
-html:not([data-theme="light"]) .decision span {
+html:not([data-theme="light"]) .decision span,
+html:not([data-theme="light"]) .decision-checklist {
     color: var(--console-muted);
 }
 

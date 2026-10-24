@@ -158,6 +158,23 @@ export function App() {
   const onLanding = !exercise && !storyPage && hash !== '#ffa' && hash !== '#story';
   const showHeader = !onLanding || (mode === 'story' && hash !== '' && hash !== '#home');
   const menuHash = mode === 'ffa' ? 'ffa' : mode === 'story' ? 'story' : 'home';
+  const menuLabel = mode === 'story' ? 'Return to mission start' : 'Return to exercise start';
+  const onExerciseStart = hash === '#ffa';
+  const onStoryLanguageSelection = hash === '#story';
+  const missionStartHash = '#story-page/orientation';
+  const onMissionStart = hash === missionStartHash;
+  const headerMenuHref = onExerciseStart || onMissionStart
+    ? '#home'
+    : mode === 'story' || onStoryLanguageSelection
+      ? missionStartHash
+      : menuHash === 'home'
+        ? undefined
+        : `#${menuHash}`;
+  const headerMenuLabel = onExerciseStart || onMissionStart
+    ? 'Back to AppSec Navigator'
+    : menuHash === 'home'
+      ? undefined
+      : menuLabel;
   const navigableEntries = track?.entries ?? [];
   const currentStep = track && currentEntry ? track.index + 1 : 0;
   const trackProgressLabel = mode === 'story'
@@ -167,7 +184,8 @@ export function App() {
   return (
     <>
       {onLanding && <BuildInfo />}
-      {showHeader && <Header theme={theme} onThemeChange={setTheme} menuHref={menuHash === 'home' ? undefined : `#${menuHash}`} menuLabel={menuHash === 'story' ? 'Mission menu' : 'Exercise menu'} />}
+      {showHeader && <Header theme={theme} onThemeChange={setTheme} menuHref={headerMenuHref} menuLabel={headerMenuLabel} />}
+      {onLanding && <a class="landing-exit-link" href="/">← Back to AppSec Community Academy</a>}
       {onLanding && (
         <button class="theme-toggle landing-theme-toggle" type="button" aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
           <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>

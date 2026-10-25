@@ -18,6 +18,9 @@ const shortCommit = commit === 'unknown' ? commit : commit.slice(0, 7);
 const dirty = !process.env.GITHUB_SHA && !process.env.SOURCE_VERSION && gitValue(['status', '--porcelain']) ? '-dirty' : '';
 
 export default defineConfig({
+  // Relative asset paths, so the build works at / and behind the
+  // Community Academy portal at /navigators/.
+  base: './',
   plugins: [preact()],
   define: {
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version ?? '0.0.0'),

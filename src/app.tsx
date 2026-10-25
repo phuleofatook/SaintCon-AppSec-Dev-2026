@@ -8,6 +8,7 @@ import { Header } from './components/Header';
 import { BuildInfo } from './components/BuildInfo';
 import { storyPages, storyTrack } from './story/story-content';
 import { StoryBeatPage } from './pages/StoryBeatPage';
+import { recordNavigatorActivity, resetActivityIdentity } from './services/activity-tracker';
 
 type AppMode = 'story' | 'ffa';
 
@@ -114,6 +115,10 @@ export function App() {
   }, [mode]);
   const review = parseReview(hash);
   const exercise = review ? controllerRef.current.selectExercise(review.slug, review.language) : undefined;
+  useEffect(() => {
+    if (!exercise) return;
+    recordNavigatorActivity(exercise.slug, 'started', { language: exercise.language, ...(mode ? { mode } : {}) });
+  }, [exercise?.slug, exercise?.language, mode]);
   const goTo = (nextHash: string) => {
     window.location.hash = nextHash;
   };
@@ -139,6 +144,14 @@ export function App() {
     setMode('story');
     setTrack({ entries, index: 0 });
     goTo(entryHash(entries[0]));
+  };
+  const resetProgress = () => {
+    if (!window.confirm('Reset all Navigator progress and start a new participant session?')) return;
+    resetActivityIdentity();
+    window.sessionStorage.removeItem('saintcon-mode');
+    window.sessionStorage.removeItem('saintcon-story-language');
+    window.location.hash = 'home';
+    window.location.reload();
   };
   const selectStoryLanguage = (language: string) => {
     const entries = createStoryEntries(controllerRef.current, language);
@@ -185,7 +198,7 @@ export function App() {
     <>
       {onLanding && <BuildInfo />}
       {showHeader && <Header theme={theme} onThemeChange={setTheme} menuHref={headerMenuHref} menuLabel={headerMenuLabel} />}
-      {onLanding && <a class="landing-exit-link" href="/">← Back to AppSec Community Academy</a>}
+      {onLanding && <a class="landing-exit-link" href="https://appsec.community/">← Back to AppSec Community Academy</a>}
       {onLanding && (
         <button class="theme-toggle landing-theme-toggle" type="button" aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
           <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>
@@ -201,6 +214,7 @@ export function App() {
           menuHash={mode === 'story' ? 'home' : menuHash}
           trackProgressLabel={trackProgressLabel}
           completed={Boolean(track && !nextEntry)}
+          onComplete={() => recordNavigatorActivity(exercise.slug, 'completed', { language: exercise.language, ...(mode ? { mode } : {}) })}
         />
       ) : hash === '#ffa' ? (
         <HomePage controller={controllerRef.current} onStartTrack={startTrack} />
@@ -214,7 +228,7 @@ export function App() {
       ) : storyPage ? (
         <StoryBeatPage page={storyPage} onBack={previousEntry ? () => goTo(entryHash(previousEntry)) : undefined} onContinue={() => nextEntry && goTo(entryHash(nextEntry))} onFinish={() => goTo('home')} progressLabel={trackProgressLabel} isFirst={!previousEntry} isLast={!nextEntry} />
       ) : (
-        <LandingPage onChooseStory={beginStory} onChooseFreeForAll={() => goTo('ffa')} />
+        <LandingPage onChooseStory={beginStory} onChooseFreeForAll={() => goTo('ffa')} onResetProgress={resetProgress} />
       )}
     </>
   );

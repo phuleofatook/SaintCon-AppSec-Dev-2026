@@ -1,0 +1,6 @@
+services:
+  navigator-academy:
+    build: .
+    ports:
+      - "8089:80"
+    restart: unless-stopped

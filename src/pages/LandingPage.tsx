@@ -1,8 +1,9 @@
 import titleArtUrl from '../assets/story-title.png';
 
-export function LandingPage({ onChooseStory, onChooseFreeForAll }: { onChooseStory: () => void; onChooseFreeForAll: () => void }) {
+export function LandingPage({ onChooseStory, onChooseFreeForAll, onResetProgress }: { onChooseStory: () => void; onChooseFreeForAll: () => void; onResetProgress: () => void }) {
   return (
     <main class="title-page">
+      <button class="theme-toggle landing-reset-progress" type="button" onClick={onResetProgress}>RESET PROGRESS</button>
       <div class="title-page-art">
         <div class="title-page-image">
           <img src={titleArtUrl} alt="Ape Input: The Reviewer's Shift. Your throughput is through the roof. Now can you take ownership of it?" />

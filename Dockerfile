@@ -1,11 +1,11 @@
 # Build the Vite app, then serve the static output with nginx.
 FROM node:22-alpine AS build
-# git lets vite.config.ts stamp the commit into the build watermark.
-RUN apk add --no-cache git
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
+ARG SOURCE_VERSION=container-build
+ENV SOURCE_VERSION=$SOURCE_VERSION
 RUN npm run build
 
 FROM nginx:1.27-alpine

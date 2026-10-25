@@ -89,6 +89,13 @@ button {
     color: var(--color-accent);
 }
 
+.landing-reset-progress {
+    position: fixed;
+    top: 58px;
+    left: 16px;
+    z-index: 5;
+}
+
 .title-page {
     min-height: 100vh;
     display: grid;

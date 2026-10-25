@@ -31,6 +31,10 @@ npm run dev
 
 Vite prints the local address (normally `http://localhost:5173`).
 
+Local and gateway-hosted sessions both send anonymous exercise start/completion signals to `https://appsec.community/api/activity`. Review decisions and scores are never transmitted.
+
+The title-screen **Reset Progress** control clears Navigator session state plus the anonymous participant and browser-session identifiers, then reloads for the next attendee. Any queued, unsent events are retained for delivery.
+
 ## Production build
 
 ```bash
@@ -39,6 +43,16 @@ npm run preview
 ```
 
 The entry page is in `index.html`; TypeScript lives in `src/main.ts` and its styles in `src/styles.css`.
+
+## Docker
+
+Build and run the production nginx image:
+
+```bash
+docker compose up --build
+```
+
+Open <http://localhost:8089>. The Vite build uses relative asset URLs so the same image also works behind the AppSec Community Academy gateway at `/navigators/`.
 
 ## References
 ### Con

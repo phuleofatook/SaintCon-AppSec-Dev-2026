@@ -9,7 +9,7 @@ function prettyPrintChoice(answer: Choice) {
 }
 
 
-export function ReviewPage({ exercise, previousHref, nextHref, trackProgressLabel, completed = false, menuHash = 'home' }: { exercise: ExercisePackage; previousHref?: string; nextHref?: string; trackProgressLabel: string; completed?: boolean; menuHash?: string }) {
+export function ReviewPage({ exercise, previousHref, nextHref, trackProgressLabel, completed = false, menuHash = 'home', onComplete }: { exercise: ExercisePackage; previousHref?: string; nextHref?: string; trackProgressLabel: string; completed?: boolean; menuHash?: string; onComplete?: () => void }) {
   const [format, setFormat] = useState<DiffOutputFormat>(() => window.matchMedia('(max-width: 760px)').matches ? 'line-by-line' : 'side-by-side');
   const [contextSize, setContextSize] = useState<number>(10);
   const [highlight, setHighlight] = useState<boolean>(true);
@@ -17,6 +17,10 @@ export function ReviewPage({ exercise, previousHref, nextHref, trackProgressLabe
   const [toolsOpen, setToolsOpen] = useState(false);
   const { item, changedFiles } = exercise;
   const recommendation = item.proposedAnswer;
+  const submitChoice = (choice: Choice) => {
+    setSubmittedChoice(choice);
+    onComplete?.();
+  };
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [exercise.slug, exercise.language]);
@@ -107,8 +111,8 @@ export function ReviewPage({ exercise, previousHref, nextHref, trackProgressLabe
               </ul>
             </div>
             <div class="decision-buttons">
-              <button class="deny" type="button" onClick={() => setSubmittedChoice(Choice.REJECT)}>Deny</button>
-              <button class="approve" type="button" onClick={() => setSubmittedChoice(Choice.ACCEPT)}>Approve</button>
+              <button class="deny" type="button" onClick={() => submitChoice(Choice.REJECT)}>Deny</button>
+              <button class="approve" type="button" onClick={() => submitChoice(Choice.ACCEPT)}>Approve</button>
             </div>
           </div>
         </section>

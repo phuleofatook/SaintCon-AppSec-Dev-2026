@@ -199,7 +199,7 @@ export function App() {
     <>
       {onLanding && <BuildInfo />}
       {showHeader && <Header theme={theme} onThemeChange={setTheme} menuHref={headerMenuHref} menuLabel={headerMenuLabel} />}
-      {onLanding && <a class="landing-exit-link" href="https://appsec.community/">← Back to AppSec Community Academy</a>}
+      {onLanding && <a class="landing-exit-link" href="/">← Back to AppSec Community Academy</a>}
       {onLanding && (
         <button class="theme-toggle landing-theme-toggle" type="button" aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
           <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>

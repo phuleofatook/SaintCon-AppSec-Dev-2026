@@ -1,0 +1,31 @@
+{
+  "id": "CR-37",
+  "difficulty": "medium",
+  "ticket": {
+    "title": "Secure flight history CSV exports",
+    "description": "Passengers can download a CSV for one of their completed flight histories. The export must remain restricted to the signed-in passenger who owns that history.",
+    "requirements": [
+      "Require the caller to be signed in.",
+      "Export the requested flight history only when it belongs to the signed-in passenger.",
+      "Do not reveal another passenger's flight history."
+    ]
+  },
+  "pr": {
+    "title": "Scope flight history exports to the requesting passenger",
+    "description": "Updates the history lookup to require both the requested history ID and the signed-in passenger ID.",
+    "author": "nova-dev",
+    "sourceBranch": "nova-dev/secure-flight-history-export",
+    "targetBranch": "main"
+  },
+  "languages": ["typescript", "java", "python"],
+  "defaultLanguage": "typescript",
+  "aiReview": {
+    "verdict": "approve",
+    "summary": "Trace both the requested history ID and the signed-in passenger ID into the lookup. Does the export return data only when those two values identify the same record?",
+    "findings": []
+  },
+  "proposedAnswer": {
+    "answer": "approve",
+    "reason": "The repository lookup scopes the requested history to the signed-in passenger, so changing a history ID cannot retrieve another passenger's export."
+  }
+}

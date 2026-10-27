@@ -84,10 +84,17 @@ export function App() {
     resetActivityIdentity();
     window.sessionStorage.removeItem('saintcon-mode');
     window.sessionStorage.removeItem('saintcon-story-language');
+  };
+  const resetToNavigatorHome = () => {
+    clearParticipantSession();
     window.location.hash = 'home';
     window.location.reload();
   };
-  useEffect(() => installIdleReset(clearParticipantSession), []);
+  const returnToCommunity = () => {
+    clearParticipantSession();
+    window.location.assign('/');
+  };
+  useEffect(() => installIdleReset(resetToNavigatorHome), []);
   useEffect(() => {
     const onHashChange = () => {
       const nextHash = window.location.hash;
@@ -156,7 +163,7 @@ export function App() {
   };
   const resetProgress = () => {
     if (!window.confirm('Reset all Navigator progress and start a new participant session?')) return;
-    clearParticipantSession();
+    resetToNavigatorHome();
   };
   const selectStoryLanguage = (language: string) => {
     const entries = createStoryEntries(controllerRef.current, language);
@@ -203,8 +210,8 @@ export function App() {
   return (
     <>
       {onLanding && <BuildInfo />}
-      {showHeader && <Header theme={theme} onThemeChange={setTheme} menuHref={headerMenuHref} menuLabel={headerMenuLabel} />}
-      {onLanding && <a class="landing-exit-link" href="/">← Back to AppSec Community Academy</a>}
+      {showHeader && <Header theme={theme} onThemeChange={setTheme} onAcademyHome={returnToCommunity} menuHref={headerMenuHref} menuLabel={headerMenuLabel} />}
+      {onLanding && <a class="landing-exit-link" href="/" onClick={(event) => { event.preventDefault(); returnToCommunity(); }}>← Back to AppSec Community Academy</a>}
       {onLanding && (
         <button class="theme-toggle landing-theme-toggle" type="button" aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
           <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>

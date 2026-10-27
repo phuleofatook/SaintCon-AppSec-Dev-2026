@@ -2,10 +2,10 @@
 
 type Theme = 'light' | 'dark';
 
-export function Header({ theme, onThemeChange, menuHref, menuLabel }: { theme: Theme; onThemeChange: (theme: Theme) => void; menuHref?: string; menuLabel?: string }) {
+export function Header({ theme, onThemeChange, onAcademyHome, menuHref, menuLabel }: { theme: Theme; onThemeChange: (theme: Theme) => void; onAcademyHome: () => void; menuHref?: string; menuLabel?: string }) {
     return (
         <header class="site-header">
-            <a href="/" class="brand" title="Return to AppSec Community Academy">
+            <a href="/" class="brand" title="Return to AppSec Community Academy" onClick={(event) => { event.preventDefault(); onAcademyHome(); }}>
                 <img src={logoUrl} alt="" aria-hidden="true" />
                 <span class="brand-name">APPSEC</span>
             </a>

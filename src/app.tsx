@@ -171,7 +171,7 @@ export function App() {
   const onLanding = !exercise && !storyPage && hash !== '#ffa' && hash !== '#story';
   const showHeader = !onLanding || (mode === 'story' && hash !== '' && hash !== '#home');
   const menuHash = mode === 'ffa' ? 'ffa' : mode === 'story' ? 'story' : 'home';
-  const menuLabel = mode === 'story' ? 'Return to mission start' : 'Return to exercise start';
+  const menuLabel = mode === 'story' ? 'Return to mission start' : 'Return to exercise menu';
   const onExerciseStart = hash === '#ffa';
   const onStoryLanguageSelection = hash === '#story';
   const missionStartHash = '#story-page/orientation';
@@ -190,6 +190,7 @@ export function App() {
       : menuLabel;
   const navigableEntries = track?.entries ?? [];
   const currentStep = track && currentEntry ? track.index + 1 : 0;
+  const showReviewNavigation = navigableEntries.length > 1;
   const trackProgressLabel = mode === 'story'
     ? `MISSION STEP ${currentStep} OF ${navigableEntries.length}`
     : `EXERCISE ${currentStep} OF ${navigableEntries.length}`;
@@ -212,7 +213,7 @@ export function App() {
           previousHref={mode === 'story' && previousEntry ? entryHash(previousEntry) : undefined}
           nextHref={nextEntry ? entryHash(nextEntry) : undefined}
           menuHash={mode === 'story' ? 'home' : menuHash}
-          trackProgressLabel={trackProgressLabel}
+          trackProgressLabel={showReviewNavigation ? trackProgressLabel : undefined}
           completed={Boolean(track && !nextEntry)}
           onComplete={() => recordNavigatorActivity(exercise.slug, 'completed', { language: exercise.language, ...(mode ? { mode } : {}) })}
         />

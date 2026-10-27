@@ -47,7 +47,9 @@ export function DiffView(props: DiffViewProps) {
       highlight: highlight ?? false
     }).draw();
 
-    const fileDiffs = target.current.querySelectorAll<HTMLElement>('.d2h-file-diff');
+    // Diff2Html uses the wrapper around each file in both output formats.
+    // The inner diff element differs between line-by-line and side-by-side.
+    const fileDiffs = target.current.querySelectorAll<HTMLElement>('.d2h-file-wrapper');
     fileDiffs.forEach((element, index) => {
       element.id = `review-file-${index}`;
       element.scrollLeft = previousHorizontalScroll[index] ?? 0;

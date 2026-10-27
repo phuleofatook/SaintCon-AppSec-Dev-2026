@@ -9,8 +9,11 @@ const difficulties = [
   { value: 'hard', label: 'Hard' },
 ];
 
+// C scenarios remain in the corpus, but are not yet part of the attendee experience.
+const attendeeLanguages = new Set(['typescript', 'java', 'python']);
+
 export function HomePage({ controller, onStartTrack }: { controller: ExerciseController; onStartTrack: (language: string, difficulties: readonly string[], maxExercises: number) => void }) {
-  const languages = controller.listLanguages();
+  const languages = controller.listLanguages().filter((language) => attendeeLanguages.has(language));
   const [language, setLanguage] = useState(languages.includes('typescript') ? 'typescript' : languages[0] ?? '');
   const [selectedDifficulties, setSelectedDifficulties] = useState<string[]>([]);
   const [trackLength, setTrackLength] = useState(1);

@@ -138,17 +138,17 @@ button {
 }
 
 .title-art-action--story {
-    left: 19.5%;
+    left: 20.1%;
     top: 79.4%;
-    width: 29.8%;
-    height: 14.5%;
+    width: 29.2%;
+    height: 14.1%;
 }
 
 .title-art-action--free-for-all {
-    left: 50.4%;
+    left: 50.9%;
     top: 79.4%;
-    width: 30.2%;
-    height: 14.5%;
+    width: 30%;
+    height: 14.1%;
 }
 
 .mode-selector {
@@ -1251,6 +1251,11 @@ button {
     overflow-x: auto;
 }
 
+/* Keep a selected file header visible below the sticky review navigation. */
+.review-page--with-navigation .pull-request .d2h-file-wrapper {
+    scroll-margin-top: 76px;
+}
+
 .pull-request .d2h-code-line,
 .pull-request .d2h-code-side-line {
     background: #0d1c2c;
@@ -1658,8 +1663,179 @@ html[data-theme="light"] .mode-card {
 
 html[data-theme="light"] .theme-toggle {
     border-color: #bdcdd7;
+    border-radius: 8px;
     color: #29495d;
     background: #fff;
+}
+
+/* The landing controls retain the shared light-mode utility treatment. */
+html[data-theme="light"] .landing-exit-link {
+    border-color: #bdcdd7;
+    border-radius: 8px;
+    color: #29495d;
+    background: #fff;
+}
+
+html[data-theme="light"] .landing-exit-link:hover,
+html[data-theme="light"] .landing-exit-link:focus-visible {
+    border-color: #5f9fbe;
+    color: #075b9a;
+    background: #e7f2f7;
+}
+
+html[data-theme="light"] .title-page {
+    background: radial-gradient(circle at 75% 20%, rgba(95, 163, 190, .16), transparent 28rem), #f4f7fa;
+}
+
+html[data-theme="light"] .title-page-art img {
+    border: 1px solid #c5d3dc;
+    border-radius: 18px;
+    box-shadow: 0 0 0 7px rgba(197, 211, 220, .24);
+}
+
+html[data-theme="light"] .story-art {
+    border: 1px solid #c5d3dc;
+    border-radius: 14px;
+    box-shadow: 0 0 0 5px rgba(197, 211, 220, .2), 0 20px 54px rgba(19, 45, 61, .26);
+}
+
+html[data-theme="light"] .story-art-action:focus-visible {
+    outline-color: #075b9a;
+    box-shadow: 0 0 0 7px rgba(7, 91, 154, .28);
+}
+
+html[data-theme="light"] .back {
+    border-color: #aabec9;
+    border-radius: 8px;
+    color: #294d62;
+    background: #fff;
+}
+
+html[data-theme="light"] .back:hover,
+html[data-theme="light"] .back:focus-visible {
+    border-color: #5f9fbe;
+    color: #075b9a;
+    background: #e7f2f7;
+}
+
+html[data-theme="light"] .back:focus-visible {
+    outline-color: rgba(7, 91, 154, .35);
+}
+
+/* Light mode uses the same compact control language throughout: orange for
+ * forward motion, blue for utility actions, and distinct semantic decisions. */
+html[data-theme="light"] .primary-action,
+html[data-theme="light"] .comparison-done:not(.secondary) {
+    border: 1px solid #b94b0a;
+    border-radius: 8px;
+    color: #fff;
+    background: #d85e13;
+    box-shadow: 0 2px 0 #9f3d05;
+    cursor: pointer;
+}
+
+html[data-theme="light"] .primary-action:hover,
+html[data-theme="light"] .primary-action:focus-visible,
+html[data-theme="light"] .comparison-done:not(.secondary):hover,
+html[data-theme="light"] .comparison-done:not(.secondary):focus-visible {
+    border-color: #8f3906;
+    background: #b94b0a;
+}
+
+html[data-theme="light"] .primary-action:disabled {
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+html[data-theme="light"] .primary-action:disabled:hover {
+    border-color: #b94b0a;
+    background: #d85e13;
+}
+
+html[data-theme="light"] .secondary-action,
+html[data-theme="light"] .track-page-link,
+html[data-theme="light"] .clear-filter,
+html[data-theme="light"] .comparison-actions .comparison-done.secondary {
+    border-color: #aabec9;
+    border-radius: 8px;
+    color: #294d62;
+    background: #fff;
+}
+
+html[data-theme="light"] .secondary-action:hover,
+html[data-theme="light"] .secondary-action:focus-visible,
+html[data-theme="light"] .track-page-link:hover,
+html[data-theme="light"] .track-page-link:focus-visible,
+html[data-theme="light"] .clear-filter:hover,
+html[data-theme="light"] .clear-filter:focus-visible,
+html[data-theme="light"] .comparison-actions .comparison-done.secondary:hover,
+html[data-theme="light"] .comparison-actions .comparison-done.secondary:focus-visible {
+    border-color: #5f9fbe;
+    color: #075b9a;
+    background: #e7f2f7;
+}
+
+html[data-theme="light"] .review-tools-trigger {
+    border-color: #064a7c;
+    color: #fff;
+    background: #075b9a;
+    box-shadow: 0 2px 0 #053b64;
+}
+
+html[data-theme="light"] .review-tools-trigger:hover,
+html[data-theme="light"] .review-tools-trigger:focus-visible {
+    border-color: #053b64;
+    background: #064a7c;
+}
+
+html[data-theme="light"] .approve {
+    border-color: #17643f;
+    border-radius: 8px;
+    color: #fff;
+    background: #267c50;
+    box-shadow: 0 2px 0 #145536;
+}
+
+html[data-theme="light"] .approve:hover,
+html[data-theme="light"] .approve:focus-visible {
+    border-color: #145536;
+    background: #17643f;
+}
+
+html[data-theme="light"] .deny {
+    border-color: #a42b22;
+    border-radius: 8px;
+    color: #fff;
+    background: #c73a2e;
+    box-shadow: 0 2px 0 #852119;
+}
+
+html[data-theme="light"] .deny:hover,
+html[data-theme="light"] .deny:focus-visible {
+    border-color: #852119;
+    background: #a42b22;
+}
+
+html[data-theme="light"] .review-again:hover,
+html[data-theme="light"] .review-again:focus-visible {
+    color: #075b9a;
+    background: #e7f2f7;
+}
+
+html[data-theme="light"] .review-tools-close:hover,
+html[data-theme="light"] .review-tools-close:focus-visible,
+html[data-theme="light"] .comparison-close:hover,
+html[data-theme="light"] .comparison-close:focus-visible {
+    border-color: #5f9fbe;
+    color: #075b9a;
+    background: #e7f2f7;
+}
+
+html[data-theme="light"] button:not(.title-art-action):not(.story-art-action):focus-visible,
+html[data-theme="light"] .track-page-link:focus-visible {
+    outline: 3px solid rgba(7, 91, 154, .35);
+    outline-offset: 2px;
 }
 
 /* Keep the review controls legible when the page is using the light palette. */
@@ -1865,6 +2041,8 @@ html[data-theme="light"] .pull-request .d2h-code-side-line del [class*=" hljs-"]
     .track-navigator-action--previous { grid-column: 1; grid-row: 2; }
     .track-navigator-action--next { grid-column: 2; grid-row: 2; }
 
+    .review-page--with-navigation .pull-request .d2h-file-wrapper { scroll-margin-top: 116px; }
+
     .brand img { width: 45px; height: 40px; }
     .brand small { display: none; }
 
@@ -1952,9 +2130,9 @@ html:not([data-theme="light"]) body {
 }
 
 html:not([data-theme="light"]) .site-header {
-    width: min(1440px, calc(100% - 48px));
-    min-height: 82px;
-    padding: 0 22px;
+    width: min(1160px, calc(100% - 48px));
+    min-height: 70px;
+    padding: 0;
     border-bottom-color: var(--console-line);
     background: linear-gradient(90deg, var(--color-ink), color-mix(in srgb, var(--color-blue) 35%, var(--color-ink)));
 }
@@ -2059,7 +2237,7 @@ html:not([data-theme="light"]) .mode-card strong {
 html:not([data-theme="light"]) .launchpad,
 html:not([data-theme="light"]) .review-page,
 html:not([data-theme="light"]) .story-briefing {
-    width: min(1280px, calc(100% - 48px));
+    width: min(1160px, calc(100% - 48px));
 }
 
 html:not([data-theme="light"]) .launchpad h1,
@@ -2092,8 +2270,8 @@ html:not([data-theme="light"]) .review-heading {
 html:not([data-theme="light"]) .exercise-filters,
 html:not([data-theme="light"]) .practice-setup,
 html:not([data-theme="light"]) .specific-picker {
-    max-width: 940px;
-    padding: 25px 24px;
+    max-width: 850px;
+    padding: 22px 0;
     border: 1px solid var(--console-line);
     border-left: 3px solid var(--console-cyan);
     border-radius: 18px;

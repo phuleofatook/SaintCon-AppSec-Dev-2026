@@ -9,7 +9,7 @@ function prettyPrintChoice(answer: Choice) {
 }
 
 
-export function ReviewPage({ exercise, previousHref, nextHref, trackProgressLabel, completed = false, menuHash = 'home', onComplete }: { exercise: ExercisePackage; previousHref?: string; nextHref?: string; trackProgressLabel: string; completed?: boolean; menuHash?: string; onComplete?: () => void }) {
+export function ReviewPage({ exercise, previousHref, nextHref, trackProgressLabel, completed = false, menuHash = 'home', onComplete }: { exercise: ExercisePackage; previousHref?: string; nextHref?: string; trackProgressLabel?: string; completed?: boolean; menuHash?: string; onComplete?: () => void }) {
   const [format, setFormat] = useState<DiffOutputFormat>(() => window.matchMedia('(max-width: 760px)').matches ? 'line-by-line' : 'side-by-side');
   const [contextSize, setContextSize] = useState<number>(10);
   const [highlight, setHighlight] = useState<boolean>(true);
@@ -51,16 +51,16 @@ export function ReviewPage({ exercise, previousHref, nextHref, trackProgressLabe
   };
 
   return <>
-    <main class="review-page">
-      <div class="review-navigation">
+    <main class={`review-page${trackProgressLabel ? ' review-page--with-navigation' : ''}`}>
+      {trackProgressLabel && <div class="review-navigation">
         <TrackNavigator
           variant="review"
           previous={previousHref ? { href: `#${previousHref}` } : undefined}
           next={nextHref ? { href: `#${nextHref}` } : undefined}
           progressLabel={trackProgressLabel}
         />
-        <button class="review-tools-trigger" type="button" aria-expanded={toolsOpen} aria-controls="review-tools-panel" onClick={() => setToolsOpen(true)}>Review tools</button>
-      </div>
+      </div>}
+      <button class="review-tools-trigger" type="button" aria-expanded={toolsOpen} aria-controls="review-tools-panel" onClick={() => setToolsOpen(true)}>Review tools</button>
       <section class="review-heading">
         <div>
           <p class="eyebrow">EXERCISE {item.id} · {item.difficulty.toUpperCase()}</p>

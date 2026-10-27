@@ -2,6 +2,9 @@ import { useState } from 'preact/hooks';
 import type { ExerciseController } from '../services/exercise-controller';
 import { TrackNavigator } from '../components/TrackNavigator';
 
+// C scenarios remain in the corpus, but are not yet part of the attendee experience.
+const attendeeLanguages = new Set(['typescript', 'java', 'python']);
+
 function languageLabel(item: string) {
   if (item === 'typescript') return 'TypeScript';
   if (item === 'python') return 'Python';
@@ -15,7 +18,7 @@ export function StoryPage({ controller, onBeginMission, onPrevious, progressLabe
   onPrevious?: () => void;
   progressLabel?: string;
 }) {
-  const languages = controller.listLanguages();
+  const languages = controller.listLanguages().filter((language) => attendeeLanguages.has(language));
   const [language, setLanguage] = useState(languages.includes('typescript') ? 'typescript' : languages[0] ?? '');
   const ready = controller.listExercisesForLanguage(language).length > 0;
 

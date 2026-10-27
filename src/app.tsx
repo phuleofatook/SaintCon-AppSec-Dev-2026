@@ -9,6 +9,7 @@ import { BuildInfo } from './components/BuildInfo';
 import { storyPages, storyTrack } from './story/story-content';
 import { StoryBeatPage } from './pages/StoryBeatPage';
 import { recordNavigatorActivity, resetActivityIdentity } from './services/activity-tracker';
+import { installIdleReset } from './services/idle-reset';
 
 type AppMode = 'story' | 'ffa';
 
@@ -79,6 +80,14 @@ export function App() {
     if (savedTheme === 'light' || savedTheme === 'dark') return savedTheme;
     return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
   });
+  const clearParticipantSession = () => {
+    resetActivityIdentity();
+    window.sessionStorage.removeItem('saintcon-mode');
+    window.sessionStorage.removeItem('saintcon-story-language');
+    window.location.hash = 'home';
+    window.location.reload();
+  };
+  useEffect(() => installIdleReset(clearParticipantSession), []);
   useEffect(() => {
     const onHashChange = () => {
       const nextHash = window.location.hash;
@@ -147,11 +156,7 @@ export function App() {
   };
   const resetProgress = () => {
     if (!window.confirm('Reset all Navigator progress and start a new participant session?')) return;
-    resetActivityIdentity();
-    window.sessionStorage.removeItem('saintcon-mode');
-    window.sessionStorage.removeItem('saintcon-story-language');
-    window.location.hash = 'home';
-    window.location.reload();
+    clearParticipantSession();
   };
   const selectStoryLanguage = (language: string) => {
     const entries = createStoryEntries(controllerRef.current, language);
